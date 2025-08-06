@@ -9,7 +9,7 @@
 
                 <div class="content_inline">
 
-                    <h2 class="title_pg">asdasdsadsadsa</h2>
+                    <h2 class="title_pg">카테고리</h2>
                     <span class="ment">상품 카테고리를 선택하여 원하는 상품을 찾을 수 있습니다.</span>
 
                     <!-- 카테고리 검색 -->
