@@ -559,9 +559,6 @@ export default {
    
     const getTopCategory = async() =>{
         
-        alert("aa");
-
-        
         try{
             
             const response = await axios.get('http://localhost:8084/public/category/getTopCategory'

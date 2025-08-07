@@ -9,6 +9,7 @@ import KeywordDetail from '../views/category/KeywordDetail.vue'
 import ProductListNaver from '../views/category/ProductListNaver.vue'
 import ProductListCoupang from '../views/category/ProductListCoupang.vue'
 import RelKeyword from '../views/category/RelKeyword.vue'
+import AdminPage from '../views/adminPage/AdminPage.vue'
 //import ReviewPop from '../views/reviewPop/RRRRRRRRPop.vue'
 //import { ModalOverlay } from 'components/ModalOverlay.vue'
 const router = createRouter({
@@ -46,6 +47,12 @@ const router = createRouter({
           path: '/relKeyword/:keywordCode',
           name: 'RelKeyword',
           component: RelKeyword,
+          props: true
+        },
+        {
+          path: '/adminPage',
+          name: 'AdminPage',
+          component: AdminPage,
           props: true
         },
       ]

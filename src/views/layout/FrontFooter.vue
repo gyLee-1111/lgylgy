@@ -17,7 +17,7 @@
             </div>
             
             <div class="footer_logo">
-                <img src="../images/common/footer_logo.png" alt="">
+                <img src="/images/common/footer_logo.png" alt="">
                 <span>(주)이고케어</span>
             </div>
             
