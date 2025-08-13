@@ -24,11 +24,11 @@
                     </ul> -->
                     
                     <li v-for="menu in authPinia.menuList" :key="menu.menuCode">
-                        <a href="#" class="title">{{ menu.menuNm }}</a>
-                        <div class="submenu" style="opacity: 1;">
+                        <a href="#" :class="{title: true, active: menu.children?.some(child => child.menuCode === authPinia.activeMenuCode)}">{{ menu.menuNm }}</a>
+                        <div class="submenu" style="opacity: 1;"v-if="menu.children && menu.children.length">
                             <ul class="">
-                                <li>
-                                    <a href="#" class="">키워드 찾기</a>
+                                <li v-for="child in menu.children" :key="child.menuCode">
+                                    <a href="#" :class="{ active: authPinia.activeMenuCode === child.menuCode }" @click.prevent="goMenuPage(child.path, child.menuCode)">{{ child.menuNm }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -88,7 +88,7 @@
                             </div>
                             
                             <!--// 로그인 후 -->
-                        </div> 
+                        </div>
                         <div v-else>
                             <!-- 로그인 전 -->
                             <a href="#" class="btn_login" ><router-link to="/LogIn">로그인</router-link></a>                        
@@ -100,7 +100,7 @@
             <!--// GNB -->
             
             <!-- 모바일용 햄버거 메뉴 -->
-            <a href="#" class="btn_sidemenu">
+            <a href="#" class="btn_sidemenu" @click.prevent="openMobileMenu">
                 <i class="fa-solid fa-bars"></i>
             </a>
             <!--// 모바일용 햄버거 메뉴 -->
@@ -111,14 +111,17 @@
     <!--//  헤더  -->
 
     <!-- GNB:mobile -->
-    <nav class="gnbarea_mobile" style="display:none;">
+    <!-- <nav class="gnbarea_mobile" style="right: -300px; display: none;"> -->
+        <nav class="gnbarea_mobile" v-show = "isMenuOpen" :style="menuStyle">
         <div class="outline">
             <div class="self_info_area" >
 
                 <!-- 상단 타이틀 -->
                 <div class="logo_mobile">
                     <h1 class="">
-                        <img src="../images/common/logo_sidemenu.png" />
+                        <router-link to="/CategoryList">
+                            <img src="/images/common/logo_sidemenu.png" />
+                        </router-link>
                     </h1>
                 </div>
                 <!--// 상단 타이틀 -->
@@ -127,7 +130,7 @@
                 <div class="loginbox_mobile">
                 
                     <!-- 로그인 전 -->
-                    <div class="before" style="">
+                    <div class="before" v-if="!authPinia.userId">
 
                         <div class="info_insert">
                             <input type="text" class="input_id" placeholder="이메일 주소 입력" />
@@ -140,54 +143,86 @@
                         </div>
 
                         <div class="bottom">
-                            <button class="btn_main_login">로그인</button>
+                            <button class="btn_main_login" @click="goLogin">로그인</button>
                         </div>
+                        <div class="sns_login_row">
+                        <ul>
+                            <li class="kakao">
+                                <a href="#">
+                                    <span class="sns_icon">
+                                        <img src="/images/login/sns_icon_kakao.png" alt="">
+                                    </span>
+                                    <span class="name" @click="kakaoLogin">카카오로 시작하기</span>
+                                </a>
+                            </li>
+                        </ul>                    
+                    </div>
 
                     </div>
                     <!--// 로그인 전 -->
 
                     <!-- 로그인 후 -->
-                    <div class="after" style="display:none;">
+                    <div v-if="authPinia.userId" class="after" style="">
                         <div class="userinfo">
                             <div class="user_txbox">
                                 <i class="fa-regular fa-circle-user"></i>
                                 <span>
-                                    <strong>관리자</strong>님 안녕하세요.
+                                    <strong>{{ authPinia.userId }}</strong>님 안녕하세요.
                                 </span>
                             </div>
                         </div>
-
+                         <!-- 권한선택 -->
                         <div class="selectbox">
-                            <select>
-                                <option>admin</option>
-                                <option>운영자</option>
-                                <option>편집자</option>
+                            <select v-model="selectRole" @change="changeRole">
+                                <option v-for="role in authPinia.userRoles" :key="role.roleCode" :value="role.roleCode">{{ role.roleNm }}</option>
                             </select>
                         </div>
-
+                        <!--// 권한선택 -->
                         <div class="bottom">
-                            <button class="btn_myclass"><i class="fa-solid fa-user-tie"></i> 관리자 페이지로 이동</button>
+                            <button  class="btn_myclass" @click="goAdminPage"><i class="fa-solid fa-user-tie"></i> 관리자 페이지로 이동</button>
                         </div>
                     </div>
                     <!--// 로그인 후 -->
 
                 </div>
                 <!--// 로그인 박스 -->
-            
-                <a href="#" class="btn_sidemenu_close"><i class="fa-solid fa-xmark"></i></a>
+                <!--모바일 햄버거 닫기 버튼 -->
+                <a href="#" class="btn_sidemenu_close" @click.prevent="openMobileMenu"><i class="fa-solid fa-xmark"></i></a>
+                <!--//모바일 햄버거 닫기 버튼 -->
             </div>              
             <ul class="gnb_mobile">
-                <li>
-                    <a href="#" class="title active"><span>키워드</span> <i class="fa-solid fa-chevron-down"></i></a>
-                    <div class="submenu" style="">
+                <li v-for="menu in authPinia.menuList" :key="menu.menuCode">
+                    <a href="#" :class="{title: true, active: menu.children?.some(child => child.menuCode === authPinia.activeMenuCode)}">
+                        <span @click.prevent="toggleMenu(menu.menuCode)">{{ menu.menuNm }}</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </a>
+                    <div class="submenu" v-if="menu.children && menu.children.length" :style="{
+                        display: (menu.children.some(child => child.menuCode === authPinia.activeMenuCode) || openMenuCode === menu.menuCode) ? 'block' : 'none'}">
                         <ul class="">
-                            <li><a href="#" class="active">키워드 찾기</a></li>
+                            <li v-for="child in menu.children" :key="child.menuCode">
+                                <a href="#" :class="{ active: authPinia.activeMenuCode === child.menuCode }" @click.prevent="goMenuPage(child.path, child.menuCode)">{{ child.menuNm }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li><a href="#" @click.prevent="logOut"><i class="fa-solid fa-power-off"></i> 로그아웃</a></li>
+
+                <!-- <li>
+                    <a href="#" class="title active">
+                        <span>키워드</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </a>
+                    <div class="submenu" style="opacity: 0;">
+                        <ul class="">
+                            <li>
+                                <a href="#" class="active">키워드 찾기</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
                 <li>
                     <a href="#" class="title"><span>커뮤니티</span> <i class="fa-solid fa-chevron-down"></i></a>
-                    <div class="submenu" style="display:none;">
+                    <div class="submenu" style="">
                         <ul class="">
                             <li><a href="#">공지사항</a></li>
                             <li><a href="#">게시판</a></li>
@@ -197,12 +232,12 @@
                 </li>
                 <li>
                     <a href="#" class="title"><span>마이페이지</span> <i class="fa-solid fa-chevron-down"></i></a>
-                    <div class="submenu" style="display:none;">
+                    <div class="submenu" style="">
                         <ul class="">
                             <li><a href="#">정보수정</a></li>
                         </ul>
                     </div>
-                </li>
+                </li> -->
             </ul>
 
             <div class="bottom_func">
@@ -211,7 +246,7 @@
                         <a href="#"><i class="fa-solid fa-pen"></i> <span>정보수정</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fa-solid fa-power-off"></i> <span>로그아웃</span></a>
+                        <a href="#" @click.prevent="logOut"><i class="fa-solid fa-power-off"></i> <span>로그아웃</span></a>
                     </li>
                 </ul>
             </div>
@@ -224,7 +259,7 @@
 <script>
 import { useAuthPinia } from '../../store/authPinia'
 import axios from 'axios'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import api from '../../plugins/api'
 import { useRouter } from 'vue-router'
 
@@ -241,12 +276,26 @@ export default {
     const getMenu = ref([])
 
   //  console.log('userRoles:', authPinia.userRoles)
+    const isMenuOpen = ref(false)
+    const menuStyle = computed(() => ({
+        right: isMenuOpen.value ? '0' : '-300px',
+    }))
+    const openMobileMenu = () => {
+        isMenuOpen.value = !isMenuOpen.value
+    }
 
+    const REST_API_KEY = "fe59b027894ddb6206595e9c8c0f113e";
+    const REDIRECT_URI = "http://localhost:5174/oauth/callback/kakao";
 
+    const kakaoLogin = () => {
+      const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login`;
+      window.location.href = kakaoLoginUrl;
+    }
 
+    
 
     function logOut() {
-    
+        isMenuOpen.value = false
         authPinia.clearUserData();
         axios.post('http://localhost:8084/login/logOut',null,
             {
@@ -270,13 +319,13 @@ export default {
             params.append('roleCode', selected.roleCode)
         
             const response = await  api.post('http://localhost:8084/login/changeRole', params,
-         /*   {
+        /*  {
              headers: {
                          'Content-Type': 'application/x-www-form-urlencoded'
              },
              withCredentials: true
             } */
-         ) 
+            ) 
             if (response.data.token) {
                 authPinia.setUserData({
                 token: response.data.token,
@@ -291,24 +340,22 @@ export default {
             alert("권한이 " + (authPinia.currentRole.roleNm) + "(으)로 변경되었습니다.");
         //    alert('변경 후 응답 토큰:' + response.data.token);
         //    alert('변경 후 피니아 토큰:' + authPinia.token);
-
-        } catch (error) {
+            } catch (error) {
                 console.error('권한변경 실패 상세:', error)
         }
         
         
     }
     const getUserMenu = async () => {
-         alert("asdasdas")
-    //     params.append('roleCode', selected.roleCode)
+    //     alert("asdasdas")
         try {
-            const resp = await api.get('http://localhost:8084/login/getUserMenu',{
-                     params: { roleCode: (authPinia.currentRole.roleCode) }
+           // const roleCode = authPinia.roleCode !== '' && authPinia.roleCode !== null 
+            let roleCode = authPinia.roleCode && authPinia.roleCode !== '' ? authPinia.currentRole?.roleCode ?? 'GUEST': 'GUEST';
+            const resp = await axios.get('http://localhost:8084/login/getUserMenu',{
+                     params: { roleCode }
             })
             authPinia.setMenuList(resp.data)
             getMenu.value = resp.data
-
-            alert(getMenu)
 
         } catch (error) {
             console.error(error)
@@ -316,7 +363,26 @@ export default {
         }
         //alert("asdasdas")
     }
+    const goAdminPage = () => {
+        router.push('/AdminPage')
+    }
+    const activeMenuCode = ref(null)
 
+    const goMenuPage = async(path, menuCode) =>{
+        if (!path) {
+            authPinia.setActiveMenuCode(menuCode)
+            return
+        }
+        authPinia.setActiveMenuCode(menuCode)
+        router.push(path)
+    }
+    const openMenuCode = ref(null)
+    const toggleMenu = (menuCode) => {
+        openMenuCode.value = openMenuCode.value === menuCode ? null : menuCode
+    }
+    const goLogin = () => {
+        router.push('/Login')
+    }
     onMounted(() => {
         // 현재 권한이 설정되어 있다면 그것으로 초기화
     //    alert(authPinia.currentRole.roleNm);
@@ -324,8 +390,9 @@ export default {
         if (current && current.roleCode) {
             selectRole.value = current.roleCode;
         }
-
+       
         getUserMenu()
+        
     }) 
   
 
@@ -336,7 +403,18 @@ export default {
         showdownInfo,
         logOut,
         changeRole,
-        selectRole
+        selectRole,
+        goAdminPage,
+        openMobileMenu,
+        isMenuOpen,
+        menuStyle,
+        goMenuPage,
+        activeMenuCode,
+
+        toggleMenu,
+        openMenuCode,
+        goLogin,
+        kakaoLogin,
         }
 
 
@@ -353,6 +431,56 @@ export default {
 </script>
 
 <style scoped>
+
+/*
+.slide-down-enter-active, .slide-down-leave-active {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+.slide-down-enter-from {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-20px);
+}
+.slide-down-enter-to {
+  max-height: 500px; 
+  opacity: 1;
+  transform: translateY(0);
+}
+.slide-down-leave-from {
+
+  max-height: 500px;
+  opacity: 1;
+  transform: translateY(0);
+}
+.slide-down-leave-to {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-20px);
+}
+.menuItem {
+  position: relative;
+}
+
+.submenu {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  display: block;
+  pointer-events: none;
+  position: absolute;
+  background: white;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+}
+
+.menuItem:hover .submenu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+*/
 
 
 </style>

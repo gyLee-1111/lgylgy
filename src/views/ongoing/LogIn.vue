@@ -1,18 +1,5 @@
 <template>
-<head>
-<meta charset="utf-8">
 
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,target-densitydpi=medium-dpi">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-
-
-
-
-<!-- Font Awesome 6 CDN -->
-
-
-</head>
  
 <body class="page_bg_gray">
 
@@ -38,7 +25,7 @@
                   <button class="btn_login" type="submit">로그인</button>
                 </form>
                 <div class="func_area">
-                    <a href="#">회원가입</a>
+                    <a href="#" @click="goJoinPage">회원가입</a>
                     <a href="#">아이디 찾기</a>
                     <a href="#">비밀번호 찾기</a>
                 </div>
@@ -51,7 +38,7 @@
                                 <span class="sns_icon">
                                     <img src="/images/login/sns_icon_kakao.png" alt="">
                                 </span>
-                                <span class="name">카카오로 시작하기</span>
+                                <span class="name" @click="kakaoLogin">카카오로 시작하기</span>
                             </a>
                         </li>
                     </ul>                    
@@ -108,39 +95,45 @@
 <script>
 import axios from 'axios'
 import { useAuthPinia } from '../../store/authPinia'
-import { nextTick } from 'vue'
-
+import { ref , nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 
 
 
 export default {
-  data() {
-    return {
-     
-        userId: '',
-        userPassword: ''
-      
-    }
-  },
-  methods: {
+  name: 'logInStatus',
+  setup() {
+    const userId = ref('')
+    const userPassword = ref('')
 
-    async Login() {
+    const router = useRouter()
+    const authPinia = useAuthPinia()
+
+    const REST_API_KEY = "fe59b027894ddb6206595e9c8c0f113e";
+    const REDIRECT_URI = "http://localhost:5174/oauth/callback/kakao";
+
+    const kakaoLogin = () => {
+      const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login`;
+      window.location.href = kakaoLoginUrl;
+    }
+
+    const Login = async () => {
 
       //env
-      if (!this.userId) {
+      if (!userId.value) {
         alert('ID를 입력하세요.')
         return
       }
 
-      if (!this.userPassword) {
+      if (!userPassword.value) {
         alert('비밀번호를 입력하세요.')
         return
       }
        try {
         const params = new URLSearchParams()
-        params.append('userId', this.userId)
-        params.append('userPassword', this.userPassword)
-        alert(this.userId)
+        params.append('userId',userId.value)
+        params.append('userPassword',userPassword.value)
+   //     alert(userId.value)
         //alert(this.userPassword)
 
        
@@ -158,7 +151,7 @@ export default {
           console.log(response);
           alert('로그인 되었습니다')
             //alert(response.data.token);
-          const authPinia = useAuthPinia()
+       
           console.log(response.data);
          // alert(response.data);
 
@@ -167,10 +160,10 @@ export default {
           
           console.log('로그인 응답 데이터:', response.data);
           authPinia.setUserData(response.data)
-          alert(authPinia.currentRole);
+  //        alert(authPinia.currentRole);
 
           await nextTick()
-          this.$router.push('/categoryList')
+          router.push('/categoryList')
       }
       } catch (error) {
         console.error('로그인 실패 상세:', error)
@@ -182,10 +175,24 @@ export default {
         alert(message)
        
       }
-
-    
     }
+    const goJoinPage = () => {
+        router.push('/JoinPage/')
+    }
+    return {
+      
+      userId,
+      userPassword,
+      Login,
+      kakaoLogin,
+      goJoinPage,
+    }
+
+
+
   }
+    
+
 }
 </script>
 <style>

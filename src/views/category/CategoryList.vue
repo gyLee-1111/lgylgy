@@ -429,7 +429,7 @@ export default {
     })
     const checkFavorite = async (keyword) => {
         try {
-            const resp = await api.post('/public/checkFavorite', {
+            const resp = await api.post('/user/keyword/checkFavorite', {
                 keywordCode: keyword.keywordCode
             });
 
@@ -837,6 +837,7 @@ export default {
 
         startDate.value = formatDate(before30)
         endDate.value = formatDate(today)
+       
     })
 
     onBeforeUnmount(() => {
@@ -911,6 +912,7 @@ export default {
         toggleCheckSelect,
         handleCheckOnly,
         goLogIn,
+        userId,
     }
     
 

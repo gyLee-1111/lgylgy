@@ -16,12 +16,15 @@ interface LogInResponseDTO {
   currentRole: UserRoleDTO;
 }
 interface UserMenuDTO {
-  menuCode: Number
+  menuCode: number
   menuNm: string
-  depth: Number
+  depth: number
   roleCode: string
   roleNm: string
   roleGroup: string
+  parentCode: number
+  path: string
+  children: UserMenuDTO[]
 }
 
 
@@ -31,9 +34,12 @@ export const useAuthPinia = defineStore('authPinia',()=>{
     const currentRole = ref<UserRoleDTO | null>(null)
 
     const userRoles = ref<UserRoleDTO[]>([])
+    
     const token = ref<string>('')
 
     const menuList = ref<UserMenuDTO[]>([])
+
+    const activeMenuCode = ref<number | null>(null)
 
     function setUserData(userData: LogInResponseDTO ) {
       console.log('setUserData userData:', userData)
@@ -67,6 +73,10 @@ export const useAuthPinia = defineStore('authPinia',()=>{
     const roleCode = computed(() =>
       userRoles.value.map(role => role.roleGroup)
     );
+
+    function setActiveMenuCode(menucode: number | null){
+      activeMenuCode.value = menucode
+    }
     
 
     return {
@@ -82,13 +92,16 @@ export const useAuthPinia = defineStore('authPinia',()=>{
 
       setMenuList,
       menuList,
+
+      activeMenuCode,
+      setActiveMenuCode,
     }
   },
   {
   persist: {
   //  enabled: true,
     storage: sessionStorage,
-    path:['userId','token','currentRole','userRoles'],
+    path:['userId','token','currentRole','userRoles','activeMenuCode'],
   } as PersistenceOptions
 
 })
