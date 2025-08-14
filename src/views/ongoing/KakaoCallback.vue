@@ -8,6 +8,8 @@ import { useAuthPinia } from '../../store/authPinia'
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 
+const baseURL = import.meta.env.VITE_API_BASE_URL
+
 const route = useRoute();
 const router = useRouter();
 const authPinia = useAuthPinia()
@@ -17,7 +19,7 @@ onMounted(async () => {
   if (code) {
     try {
       // 백엔드에 인가코드 전달
-      const response = await axios.get(`http://localhost:8084/login/kakao/logIn?code=${code}`);
+      const response = await axios.get(`${baseURL}/login/kakao/logIn?code=${code}`);
       const { accessToken, nickname } = response.data;
 
       // 로그인 성공 처리 (로컬스토리지 저장 등)

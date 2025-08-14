@@ -103,17 +103,21 @@ import { useRouter } from 'vue-router'
 export default {
   name: 'logInStatus',
   setup() {
+    const baseURL = import.meta.env.VITE_API_BASE_URL
+    const kakaoRestApiKey = import.meta.env.VITE_KAKAO_REST_API_KEY
+    const kakaoRedirectUrl = import.meta.env.VITE_KAKAO_REDIRECT_URI
+
     const userId = ref('')
     const userPassword = ref('')
 
     const router = useRouter()
     const authPinia = useAuthPinia()
 
-    const REST_API_KEY = "fe59b027894ddb6206595e9c8c0f113e";
-    const REDIRECT_URI = "http://localhost:5174/oauth/callback/kakao";
+  //  const REST_API_KEY = "fe59b027894ddb6206595e9c8c0f113e";
+  //  const REDIRECT_URI = "http://localhost:5174/oauth/callback/kakao";
 
     const kakaoLogin = () => {
-      const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login`;
+      const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoRestApiKey}&redirect_uri=${kakaoRedirectUrl}&response_type=code&prompt=login`;
       window.location.href = kakaoLoginUrl;
     }
 
@@ -137,7 +141,7 @@ export default {
         //alert(this.userPassword)
 
        
-        const response = await axios.post('http://localhost:8084/login/logInApi', params,
+        const response = await axios.post(`${baseURL}/login/logInApi`, params,
         {
           headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'

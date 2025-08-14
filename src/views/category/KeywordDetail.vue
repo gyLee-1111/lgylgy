@@ -301,7 +301,7 @@
                                     </div>
                                     <div id="searchGender-container">
                                         <p class="chart_body">
-                                            챠트 삽입 영역
+                                          
                                         </p>
                                     </div>
                                 </div>
@@ -312,7 +312,7 @@
                                     </div>
                                     <div id="age-container"> 
                                         <div class="chart_body">
-                                            챠트 삽입 영역
+                                           
                                         </div>
                                     </div>
                                 </div>
@@ -460,7 +460,7 @@ export default {
         const getRelKeyword = async() =>{
 
             try{
-                const response = await api.get('http://localhost:8084/user/relkeyword/getRelKeyword',{
+                const response = await api.get('/user/relkeyword/getRelKeyword',{
                 params: {
                     keywordCode: keywordCode,
                     limitCount: 7
@@ -479,7 +479,7 @@ export default {
             
 
             try {
-                const response = await api.get('http://localhost:8084/user/keyword/getDetailKeyword',{
+                const response = await api.get('/user/keyword/getDetailKeyword',{
                 params: {
                     keywordCode: keywordCode
                 }
@@ -492,7 +492,7 @@ export default {
                // alert(keywordScore.value);
   
 
-                const res = await api.get('http://localhost:8084/user/keyword/getCountReview',{
+                const res = await api.get('/user/keyword/getCountReview',{
                     params: {
                         keywordCode: keywordCode
                     }
@@ -507,7 +507,7 @@ export default {
                 top20Sales.value = res.data.top20Sales
 
 
-                const resp = await api.get('http://localhost:8084/user/keyword/getKeywordChart',{
+                const resp = await api.get('/user/keyword/getKeywordChart',{
                 params: {
                     keywordCode: keywordCode
                 }
@@ -553,6 +553,9 @@ export default {
                     exporting: {
                         enabled: false
                     },
+                    credits: {
+                        enabled: false // 👈 하단 컨테이너 제거
+                    },
                     plotOptions: {
                         pie: {
                             allowPointSelect: true,
@@ -563,7 +566,7 @@ export default {
                             }, {
                                 enabled: true,
                                 distance: -40,
-                                format: '{point.percentage:.1f}%',
+                                format: '{point.percentage:.1f}%' +'{name}',
                                 style: {
                                     fontSize: '1.2em',
                                     textOutline: 'none',
@@ -584,7 +587,7 @@ export default {
                             data: [
                                 {
                                     name: 'PC검색량',
-                                    y: devicePc.value 
+                                    y: devicePc.value
                                 },
                                 {
                                     name: '모바일 검색량',
@@ -619,6 +622,9 @@ export default {
                     exporting: {
                         enabled: false
                     },
+                    credits: {
+                        enabled: false // 👈 하단 컨테이너 제거
+                    },
 
                     plotOptions: {
                         pie: {
@@ -630,7 +636,7 @@ export default {
                             }, {
                                 enabled: true,
                                 distance: -40,
-                                format: '{point.percentage:.1f}%',
+                                format: '{point.percentage:.1f}%' +'{name}' ,
                                 style: {
                                     fontSize: '1.2em',
                                     textOutline: 'none',
@@ -699,6 +705,9 @@ export default {
                             borderWidth: 0
                         }
                     },
+                    credits: {
+                        enabled: false // 👈 하단 컨테이너 제거
+                    },
                     series: [
                         {
                             name: '',
@@ -739,6 +748,10 @@ export default {
                     exporting: {
                         enabled: false
                     },
+                    credits: {
+                        enabled: false // 👈 하단 컨테이너 제거
+                    },
+
 
                     plotOptions: {
                         series: {

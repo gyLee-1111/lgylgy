@@ -328,9 +328,13 @@ import { openModalBackGround } from '../../utils/globalFunctions'
 import { closeModalBackGround } from '../../utils/globalFunctions'
 import { useModalStore } from '../../store/modal';
 
+
+
 export default {
     name: 'CategoryList',
     setup() {
+        const baseURL = import.meta.env.VITE_API_BASE_URL
+
         const modalStore = useModalStore();
         const isModalOpen = ref(false)
 
@@ -561,7 +565,7 @@ export default {
         
         try{
             
-            const response = await axios.get('http://localhost:8084/public/category/getTopCategory'
+            const response = await axios.get(`${baseURL}/public/category/getTopCategory`
         //      ,
         //  {
         //    headers: {
@@ -587,7 +591,7 @@ export default {
 
     const getSubCategory = async() =>{
         try{
-            const response = await axios.get('http://localhost:8084/public/category/getSubCategory',{
+            const response = await axios.get(`${baseURL}/public/category/getSubCategory`,{
                 params:{
                   parentCode:  selectedCategoryCode.value
                 }
@@ -611,7 +615,7 @@ export default {
     }
     const getSubCategory2 = async() =>{
         try{
-            const response = await axios.get('http://localhost:8084/public/category/getSubCategory',{
+            const response = await axios.get(`${baseURL}/public/category/getSubCategory`,{
                 params:{
                   parentCode:  selectedCategoryCode2.value
                 }
@@ -633,7 +637,7 @@ export default {
     }
     const getSubCategory3 = async() =>{
         try{
-            const response = await axios.get('http://localhost:8084/public/category/getSubCategory',{
+            const response = await axios.get(`${baseURL}/public/category/getSubCategory`,{
                 params:{
                   parentCode:  selectedCategoryCode3.value
                 }
@@ -667,7 +671,7 @@ export default {
             } else  {
                 parentCode = selectedCategoryCode.value;
             }
-            alert(parentCode + 'asdasd')
+        //  alert(parentCode + 'asdasd')
 
             if (!parentCode && !isDirectSearch.value) {
                 alert("카테고리를 선택해주세요.");
@@ -694,7 +698,7 @@ export default {
             };
             
         try{
-            const response = await api.post('http://localhost:8084/user/keyword/getListKeyword', params)
+            const response = await api.post('/user/keyword/getListKeyword', params)
          //   alert(parentCode +'여기는')
     
             if(response.status==200) {
@@ -708,8 +712,16 @@ export default {
 
         } catch (error){
         //    alert(parentCode + '여기서 오류')
-            
-           
+            console.error('getListKeyword API 호출 에러:', error);
+  alert('키워드 목록을 불러오는 중 오류가 발생했습니다.');
+           if (error.response) {
+    console.error('응답 데이터:', error.response.data);
+    console.error('상태 코드:', error.response.status);
+  } else if (error.request) {
+    console.error('요청은 됐으나 응답 없음:', error.request);
+  } else {
+    console.error('요청 설정 오류:', error.message);
+  }
         }
 
 
@@ -723,7 +735,7 @@ export default {
                 keywordNm: keywordNm.value};
             
         try{
-            const response = await axios.post('http://localhost:8084/public/getListKeyword', params)
+            const response = await axios.post(http://localhost:8084/public/getListKeyword', params)
        
             if(response.status==200) {
    
@@ -783,7 +795,7 @@ export default {
                 checkSelect: checkSelect.value,
             };
 
-            const response = await api.get('http://localhost:8084/public/keyword/downloadKeywordExcel', {
+            const response = await api.get('/public/keyword/downloadKeywordExcel', {
                 params: params,
                 responseType: 'blob'
             });
@@ -928,7 +940,7 @@ export default {
 
 
 <style scoped>
-/* 
+
 .slide-down-enter-active, .slide-down-leave-active {
   transition: all 0.9s ease;
   overflow: hidden;
@@ -952,7 +964,7 @@ export default {
   max-height: 0;
   opacity: 0;
   transform: translateY(-20px);
-} */
+}
 
 
 </style>

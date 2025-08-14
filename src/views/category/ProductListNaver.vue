@@ -281,7 +281,7 @@ export default {
 
     const getListProduct = async() =>{
         try{
-            const response = await api.get('http://localhost:8084/user/product/getListProductNaver',{
+            const response = await api.get('/user/product/getListProductNaver',{
                 params: {
                     keywordCode: keywordCode
                 }
@@ -360,7 +360,7 @@ export default {
     const getKeywordNm = async() =>{
 
             try{
-                const response = await api.get('http://localhost:8084/user/keyword/getKeywordNm',{
+                const response = await api.get('/user/keyword/getKeywordNm',{
                 params: {
                     keywordCode: keywordCode
                 }

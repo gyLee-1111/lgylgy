@@ -142,7 +142,7 @@ export default {
 
         const getListReview = async () => {
             try {
-                const response = await api.get('http://localhost:8084/reviewPop/getListReview', {
+                const response = await api.get('/reviewPop/getListReview', {
                 params: { productCode: productCode.value },
         //        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 })
@@ -163,7 +163,7 @@ export default {
 
         const downloadExcelReview = async () => {
         try {
-            const res = await api.get('http://localhost:8084/reviewPop/downloadExcelReview', {
+            const res = await api.get('/reviewPop/downloadExcelReview', {
                 params: {productCode: productCode.value},
                 responseType: 'blob'
             });
@@ -185,7 +185,7 @@ export default {
         }
         const getTotalPriceNaver = async() =>{
         try{
-            const resp = await api.get('http://localhost:8084/reviewPop/getTotalPriceReview',
+            const resp = await api.get('/reviewPop/getTotalPriceReview',
             {
                 params: {productCode: productCode.value}
             });

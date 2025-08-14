@@ -50,7 +50,7 @@ const router = createRouter({
           props: true,
           meta:{
             requiresAuth: true,
-            roles: ['USER_NOMAL','SYSTEM_ADMIN']
+            roles: ['USER_NORMAL','SYSTEM_ADMIN']
           }
         },
         {
@@ -60,7 +60,7 @@ const router = createRouter({
           props: true,
           meta:{
             requiresAuth: true,
-            roles: ['USER_NOMAL','SYSTEM_ADMIN']
+            roles: ['USER_NORMAL','SYSTEM_ADMIN']
           }
         },
         {
@@ -70,7 +70,7 @@ const router = createRouter({
           props: true,
           meta:{
             requiresAuth: true,
-            roles: ['USER_NOMAL','SYSTEM_ADMIN']
+            roles: ['USER_NORMAL','SYSTEM_ADMIN']
           }
         },
         {
@@ -80,7 +80,7 @@ const router = createRouter({
           props: true,
           meta:{
             requiresAuth: true,
-            roles: ['USER_NOMAL','SYSTEM_ADMIN']
+            roles: ['USER_NORMAL','SYSTEM_ADMIN']
           }
         },
         {

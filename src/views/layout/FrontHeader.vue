@@ -179,7 +179,7 @@
                         </div>
                         <!--// 권한선택 -->
                         <div class="bottom">
-                            <button  class="btn_myclass" @click="goAdminPage"><i class="fa-solid fa-user-tie"></i> 관리자 페이지로 이동</button>
+                            <button v-if="authPinia.currentRole.roleGroup === 'ADMIN'" class="btn_myclass" @click="goAdminPage"><i class="fa-solid fa-user-tie"></i> 관리자 페이지로 이동</button>
                         </div>
                     </div>
                     <!--// 로그인 후 -->
@@ -205,7 +205,7 @@
                         </ul>
                     </div>
                 </li>
-                <li><a href="#" @click.prevent="logOut"><i class="fa-solid fa-power-off"></i> 로그아웃</a></li>
+                
 
                 <!-- <li>
                     <a href="#" class="title active">
@@ -263,9 +263,15 @@ import { onMounted, ref, computed } from 'vue'
 import api from '../../plugins/api'
 import { useRouter } from 'vue-router'
 
+
+
 export default {
   name: 'logInStatus',
   setup() {
+    const baseURL = import.meta.env.VITE_API_BASE_URL
+    const kakaoRestApiKey = import.meta.env.VITE_KAKAO_REST_API_KEY
+    const kakaoRedirectUrl = import.meta.env.VITE_KAKAO_REDIRECT_URI
+
     const authPinia = useAuthPinia()
     const showUserInfo = ref(false)
 
@@ -284,24 +290,24 @@ export default {
         isMenuOpen.value = !isMenuOpen.value
     }
 
-    const REST_API_KEY = "fe59b027894ddb6206595e9c8c0f113e";
-    const REDIRECT_URI = "http://localhost:5174/oauth/callback/kakao";
+//    const REST_API_KEY = "fe59b027894ddb6206595e9c8c0f113e";
+//    const REDIRECT_URI = "http://localhost:5174/oauth/callback/kakao";
 
     const kakaoLogin = () => {
-      const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login`;
+      const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoRestApiKey}&redirect_uri=${kakaoRedirectUrl}&response_type=code&prompt=login`;
       window.location.href = kakaoLoginUrl;
     }
 
     
 
     function logOut() {
-        isMenuOpen.value = false
+        isMenuOpen.value = !isMenuOpen.value
         authPinia.clearUserData();
-        axios.post('http://localhost:8084/login/logOut',null,
+        axios.post(`${baseURL}/login/logOut`,null,
             {
           withCredentials: true 
         })
-        alert("logout");
+    //    alert("logout");
 
         router.push('/LogIn');
     }
@@ -318,7 +324,7 @@ export default {
             
             params.append('roleCode', selected.roleCode)
         
-            const response = await  api.post('http://localhost:8084/login/changeRole', params,
+            const response = await  api.post('/login/changeRole', params,
         /*  {
              headers: {
                          'Content-Type': 'application/x-www-form-urlencoded'
@@ -337,7 +343,7 @@ export default {
         }
             getUserMenu()
             // authPinia.setCurrentRole(selected)
-            alert("권한이 " + (authPinia.currentRole.roleNm) + "(으)로 변경되었습니다.");
+        //  alert("권한이 " + (authPinia.currentRole.roleNm) + "(으)로 변경되었습니다.");
         //    alert('변경 후 응답 토큰:' + response.data.token);
         //    alert('변경 후 피니아 토큰:' + authPinia.token);
             } catch (error) {
@@ -351,7 +357,7 @@ export default {
         try {
            // const roleCode = authPinia.roleCode !== '' && authPinia.roleCode !== null 
             let roleCode = authPinia.roleCode && authPinia.roleCode !== '' ? authPinia.currentRole?.roleCode ?? 'GUEST': 'GUEST';
-            const resp = await axios.get('http://localhost:8084/login/getUserMenu',{
+            const resp = await axios.get(`${baseURL}/login/getUserMenu`,{
                      params: { roleCode }
             })
             authPinia.setMenuList(resp.data)

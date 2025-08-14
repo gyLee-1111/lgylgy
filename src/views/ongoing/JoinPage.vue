@@ -23,7 +23,7 @@
                 <input type="password" class="" v-model="password" placeholder="비밀번호 입력" />
             </div>
             <div class="inner_full">
-                <input type="password" class="" v-model="nomalPassword" placeholder="비밀번호 확인 입력" />
+                <input type="password" class="" v-model="normalPassword" placeholder="비밀번호 확인 입력" />
             </div>
             <div class="confirm_msg" v-if="passwordError">* 비밀번호가 일치하지 않습니다.</div>
 
@@ -34,7 +34,7 @@
 
             <div class="member_title">휴대폰 번호</div>
             <div class="inner_full">
-                <input type="text" class="" v-model="phoneNumber" placeholder="휴대폰 번호 입력 (-)는 빼고 숫자만 입력해주세요" />
+                <input type="text" class="" v-model="phoneNumber" placeholder="휴대폰 번호 입력 (-)는 빼고 숫자만 입력해주세요"  @input="onPhoneInput" />
             </div>
 
             <div class="member_title">생년월일</div>
@@ -84,19 +84,24 @@ import { ref , watch , computed } from 'vue'
 export default {
     name: 'joinStatus',
     setup() {
+        const baseURL = import.meta.env.VITE_API_BASE_URL
+
         const router = useRouter()
 
         const email = ref('');
         const code = ref('');
         const password = ref('');
-        const nomalPassword = ref('');
-        const passwordError = ref(false);
+        const normalPassword = ref('');
+        const passwordError = ref('');
         const userNm = ref('');
         const phoneNumber = ref('');
+        const onPhoneInput = (event) => {
+             phoneNumber.value = event.target.value.replace(/\D/g, '')
+        }
         const birthYear = ref('');
         const birthMonth = ref('');
         const birthDay = ref('');
-        const userGender = ref('');
+        const userGender = ref('');1
 
         const isVerified = ref(false);
 
@@ -127,7 +132,7 @@ export default {
             try {
                 const params = new URLSearchParams();
                 params.append('email', email.value)
-                await axios.post('http://localhost:8084/join/membership/verification', params);
+                await axios.post(`${baseURL}/join/membership/verification`, params);
                 
                 alert('인증코드 전송')
 
@@ -142,7 +147,7 @@ export default {
         }
         const checkVerificationCode = async () => {
             try{
-                await axios.post('http://localhost:8084/join/membership/checkVerification',{
+                await axios.post(`${baseURL}/join/membership/checkVerification`,{
                     email: email.value,
                     code: code.value
                 })
@@ -155,7 +160,7 @@ export default {
                 alert('인증코드 인증실패.')
             }
         }
-        watch([password, nomalPassword], ([pw, pw2]) => {
+        watch([password, normalPassword], ([pw, pw2]) => {
             if (!pw2) {
                 passwordError.value = false;
             } else if (pw !== pw2) {
@@ -167,19 +172,25 @@ export default {
         /*
         const checkStute = async () => {
             alert(email.value)
-            alert(nomalPassword.value)
+            alert(normalPassword.value)
             alert(userNm.value)
             alert(phoneNumber.value)
             alert(userBirth.value)
             alert(userGender.value)
         }
             */
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
         const insertUser = async () => {
             if (isVerified.value == false) {
                 alert('메일 정보를 인증해 주세요.');
                 return;
             }
-            if (password.value !== nomalPassword.value) {
+            if (!passwordRegex.test(password.value)) {
+                alert('비밀번호는 최소 8자, 영문, 숫자, 특수문자를 포함해야 합니다.');
+                return;
+            }
+            if (password.value !== normalPassword.value) {
                 alert('비밀번호가 일치하지 않습니다.');
                 return;
             }
@@ -201,9 +212,9 @@ export default {
             }
             // 회원가입 처리 로직...
             try{
-                await axios.post('http://localhost:8084/join/membership/insertUser',{
+                await axios.post(`${baseURL}/join/membership/insertUser`,{
                     email: email.value,
-                    nomalPassword: nomalPassword.value,
+                    normalPassword: normalPassword.value,
                     userNm: userNm.value,
                     phoneNumber: phoneNumber.value,
                     userBirth: userBirth.value,
@@ -227,7 +238,7 @@ export default {
         email,
         code,
         password,
-        nomalPassword,
+        normalPassword,
         passwordError,
         userNm,
         phoneNumber,
@@ -246,6 +257,7 @@ export default {
         userBirth,
 
         insertUser,
+        onPhoneInput,
         }
     }
 }

@@ -2,9 +2,10 @@
 import axios from 'axios'
 import { useAuthPinia } from '../store/authPinia'
 import router from '../router'
-
+console.log(import.meta.env.VITE_API_BASE_URL)
 const api = axios.create({
-  baseURL: 'http://localhost:8084',
+  
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
   timeout: 10000
 })
@@ -43,7 +44,7 @@ console.log(error.response?.status)
       error.config._retry = true;
 
       try {
-        const res = await axios.post('http://localhost:8084/login/refreshToken',
+        const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/login/refreshToken`,
         {}, 
         {
              withCredentials: true //  쿠키 자동 포함
@@ -67,7 +68,7 @@ console.log(error.response?.status)
         console.log(refreshError)
         console.error('Refresh Token 만료 로그아웃')
         authPinia.clearUserData()
-        await axios.post('http://localhost:8084/login/logOut',null,
+        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/login/logOut`,null,
         {
           withCredentials: true 
         })
@@ -87,6 +88,13 @@ console.log(error.response?.status)
     else{
       console.log("다른 에러");
       console.log(error.response);
+      if (axios.isAxiosError(error)) {
+    console.log('Axios 에러 메시지:', error.message);
+    console.log('응답 데이터:', error.response?.data);
+    console.log('상태 코드:', error.response?.status);
+  } else {
+    console.log('일반 JS 에러:', error);
+  }
     }
   }
 )

@@ -199,7 +199,7 @@ export default {
         const getRelKeyword = async() =>{
 
             try{
-                const response = await api.get('http://localhost:8084/user/relkeyword/getRelKeyword',{
+                const response = await api.get('/user/relkeyword/getRelKeyword',{
                 params: {
                     keywordCode: keywordCode,
                     limitCount: 20
@@ -221,7 +221,7 @@ export default {
         const downloadExcelRelKeyword = async () => {
 
             try {
-                const res = await api.get('http://localhost:8084/user/relkeyword/downloadRelKeywordExcel', {
+                const res = await api.get('/user/relkeyword/downloadRelKeywordExcel', {
                     params: {
                         keywordCode: keywordCode
                     },
@@ -247,7 +247,7 @@ export default {
         const getKeywordNm = async() =>{
 
             try{
-                const response = await api.get('http://localhost:8084/user/keyword/getKeywordNm',{
+                const response = await api.get('/user/keyword/getKeywordNm',{
                 params: {
                     keywordCode: keywordCode
                 }
