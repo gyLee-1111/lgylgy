@@ -29,7 +29,7 @@ api.interceptors.response.use(
  async response => {
 
   //alert(response);
-  const authPinia = useAuthPinia()
+  
   
 
     return response

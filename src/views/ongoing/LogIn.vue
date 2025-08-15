@@ -52,7 +52,7 @@
                         <li>
                             <a href="#">
                                 <span class="sns_icon">
-                                    <img src="../images/login/sns_icon_kakao.png" alt="">
+                                    <img src="/images/login/sns_icon_kakao.png" alt="">
                                 </span>
                                 <span class="name">카카오로<br/>시작하기</span>
                             </a>
