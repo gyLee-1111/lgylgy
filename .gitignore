@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+
 node_modules
 dist
 dist-ssr
@@ -22,3 +23,16 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+####################
+vue-frontend/.env
+# TypeScript config (optional, if generated or personal)
+# tsconfig.*.json
+
+# Temporary / backup Vue files
+* copy.vue
+* copy *.vue
+
+*.7z
+*.zip
+*.rar
