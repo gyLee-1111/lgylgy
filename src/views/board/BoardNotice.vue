@@ -1,20 +1,30 @@
 <template>
     
+     <div class="wrapper">
+        <FrontHeader />
+
+        <main>  
      
+
+        </main>
+    </div>
+     <FrontFooter />
 
 </template>
 
 <script>
 
 export default {
-  name: "AdminPage",
+  name: "board",
   components: {
-
+    
   },
   setup() {
+   
 
     
     return {
+     
     }
   }
 }

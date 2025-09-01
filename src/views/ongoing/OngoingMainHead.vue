@@ -33,7 +33,7 @@ export default {
   methods:{
    OngoingLogOut() {
       this.authPinia.clearUserData();
-      axios.post('http://localhost:8084/login/ongoing/ongoingLogOut',null,
+      axios.post($apiBaseUrl + '/login/ongoing/ongoingLogOut',null,
         {
           withCredentials: true 
         })

@@ -7,7 +7,7 @@
             <div class="product_review">
                 <div class="thum">
                     <!-- 126*126 -->
-                    <img v-if="product?.productImg" :src="`http://localhost:8084/images/product/${product.productImg}`" alt="">
+                    <img v-if="product?.productImg" :src="$apiBaseUrl +`/images/product/${product.productImg}`" alt="">
                 </div>
                 <div class="detail_info">
                     <strong class="title">{{ product?.productNm }}</strong>
@@ -219,22 +219,7 @@ export default {
             productCode.value = newCode
             if (newCode) getListReview()
         }, { immediate: true })
-    /*  
-        const getProductReview = async () => {
-            try{
-                const res = await axios.post('http://localhost:8084/reviewPop/getProductReview',{
-                    params: { productCode: productCode.value }
-                })
-                if(res.status==200) {
-                    product
-                }else {
-                alert('어디서 오류')
-            }
-            }   catch(err) {
-                console.error('리뷰 불러오기 실패:', err)
-            }
-        }
-        */
+    
 
         onMounted(() => {
 

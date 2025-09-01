@@ -8,7 +8,7 @@
             <!-- 사이트 로고 -->
             <h1 class="logo">
                 <router-link to="/CategoryList">
-                    <img src="/images/common/logo.png" />
+                    adasdasdasdasd<img src="/images/common/logo.png" />
                 </router-link>
             </h1>
 
@@ -34,7 +34,7 @@
                         </div>
                     </li>
                     
-                    <!-- <li>
+                <!--<li>
                         <a href="#" class="title">키워드</a>
                         <div class="submenu" style="opacity: 1;">
                             <ul class="">
@@ -72,7 +72,7 @@
                             <div v-if="showUserInfo" class="user_info_pop" >
                                 <ol>
                                     <router-link to="/admin/main">
-                                        <li v-if="authPinia.currentRole.roleGroup === 'ADMIN'"><a href="#"><i class="fa-solid fa-user-tie"></i> 관리자 페이지</a></li>
+                                        <li v-if="authPinia.currentRole.roleGroup === 'ADMIN'"><a href="#"><i class="fa-solid fa-user-tie"></i> 일반 페이지</a></li>
                                     </router-link>
                                     <li><a href="#"><i class="fa-solid fa-gear"></i> 정보수정</a></li>                                        
                                     <li><a href="#" @click.prevent="logOut"><i class="fa-solid fa-power-off"></i> 로그아웃</a></li>
@@ -130,35 +130,7 @@
                 <div class="loginbox_mobile">
                 
                     <!-- 로그인 전 -->
-                    <div class="before" v-if="!authPinia.userId">
-
-                        <div class="info_insert">
-                            <input type="text" class="input_id" placeholder="이메일 주소 입력" />
-                            <input type="password" class="input_pw" placeholder="비밀번호 입력" />
-                        </div>
-
-                        <div class="func">
-                            <input type="checkbox" id="id_save"/>
-                            <label for="id_save"><span>아이디 저장</span></label>
-                        </div>
-
-                        <div class="bottom">
-                            <button class="btn_main_login" @click="goLogin">로그인</button>
-                        </div>
-                        <div class="sns_login_row">
-                        <ul>
-                            <li class="kakao">
-                                <a href="#">
-                                    <span class="sns_icon">
-                                        <img src="/images/login/sns_icon_kakao.png" alt="">
-                                    </span>
-                                    <span class="name" @click="kakaoLogin">카카오로 시작하기</span>
-                                </a>
-                            </li>
-                        </ul>                    
-                    </div>
-
-                    </div>
+                   
                     <!--// 로그인 전 -->
 
                     <!-- 로그인 후 -->
@@ -179,7 +151,7 @@
                         </div>
                         <!--// 권한선택 -->
                         <div class="bottom">
-                            <button v-if="authPinia.currentRole.roleGroup === 'ADMIN'" class="btn_myclass" @click="goAdminPage"><i class="fa-solid fa-user-tie"></i> 관리자 페이지로 이동</button>
+                            <button v-if="authPinia.currentRole.roleGroup === 'ADMIN'" class="btn_myclass" @click="goAdminPage"><i class="fa-solid fa-user-tie"></i> 일반 페이지로 이동</button>
                         </div>
                     </div>
                     <!--// 로그인 후 -->
@@ -266,11 +238,10 @@ import { useRouter } from 'vue-router'
 
 
 export default {
-  name: 'logInStatus',
+  name: 'AdminHeader',
   setup() {
     const baseURL = import.meta.env.VITE_API_BASE_URL
-    const kakaoRestApiKey = import.meta.env.VITE_KAKAO_REST_API_KEY
-    const kakaoRedirectUrl = import.meta.env.VITE_KAKAO_REDIRECT_URI
+   
 
     const authPinia = useAuthPinia()
     const showUserInfo = ref(false)
@@ -293,10 +264,7 @@ export default {
 //    const REST_API_KEY = "fe59b027894ddb6206595e9c8c0f113e";
 //    const REDIRECT_URI = "http://localhost:5174/oauth/callback/kakao";
 
-    const kakaoLogin = () => {
-      const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoRestApiKey}&redirect_uri=${kakaoRedirectUrl}&response_type=code&prompt=login`;
-      window.location.href = kakaoLoginUrl;
-    }
+    
 
     
 
@@ -341,7 +309,7 @@ export default {
                 
             })
         }
-            getUserMenu()
+            getAdminMenu()
             // authPinia.setCurrentRole(selected)
         //  alert("권한이 " + (authPinia.currentRole.roleNm) + "(으)로 변경되었습니다.");
         //    alert('변경 후 응답 토큰:' + response.data.token);
@@ -352,13 +320,14 @@ export default {
         
         
     }
-    const getUserMenu = async () => {
+    const getAdminMenu = async () => {
     //     alert("asdasdas")
         try {
            // const roleCode = authPinia.roleCode !== '' && authPinia.roleCode !== null 
             let roleCode = authPinia.roleCode && authPinia.roleCode !== '' ? authPinia.currentRole?.roleCode ?? 'GUEST': 'GUEST';
-            const resp = await axios.get(`${baseURL}/login/getUserMenu`,{
-                     params: { roleCode }
+            const resp = await api.get(`${baseURL}/admin/getAdminMenu`,{
+            
+                params: { roleCode }
             })
             authPinia.setMenuList(resp.data)
             getMenu.value = resp.data
@@ -386,9 +355,7 @@ export default {
     const toggleMenu = (menuCode) => {
         openMenuCode.value = openMenuCode.value === menuCode ? null : menuCode
     }
-    const goLogin = () => {
-        router.push('/Login')
-    }
+    
     onMounted(() => {
         // 현재 권한이 설정되어 있다면 그것으로 초기화
     //    alert(authPinia.currentRole.roleNm);
@@ -397,7 +364,7 @@ export default {
             selectRole.value = current.roleCode;
         }
        
-        getUserMenu()
+        getAdminMenu()
         
     }) 
   
@@ -419,8 +386,7 @@ export default {
 
         toggleMenu,
         openMenuCode,
-        goLogin,
-        kakaoLogin,
+        
         }
 
 

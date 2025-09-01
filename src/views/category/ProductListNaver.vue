@@ -106,7 +106,7 @@
                                             <div class="thum">
                                                 <span class="num">{{index + 1 }}</span>
                                                 <!-- 126*126 -->
-                                                <img v-if="product && product.productImg" :src="'http://localhost:8084/images/product/' + product.productImg" alt="">
+                                                <img v-if="product && product.productImg" :src="$apiBaseUrl +'/images/product/' + product.productImg" alt="">
                                                 <p v-else>이미지가 없습니다</p>
                                             </div>
                                             

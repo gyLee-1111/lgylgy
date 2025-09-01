@@ -7,7 +7,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-
 node_modules
 dist
 dist-ssr
@@ -32,7 +31,4 @@ vue-frontend/.env
 # Temporary / backup Vue files
 * copy.vue
 * copy *.vue
-
-*.7z
-*.zip
-*.rar
+/

@@ -4,15 +4,21 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import LogIn from '../views/ongoing/LogIn.vue'
 import FrontLayout from '../views/layout/FrontLayout.vue'
+import AdminLayout from '../views/layout/AdminLayout.vue'
 import CategoryList from '../views/category/CategoryList.vue'
 import KeywordDetail from '../views/category/KeywordDetail.vue'
 import ProductListNaver from '../views/category/ProductListNaver.vue'
 import ProductListCoupang from '../views/category/ProductListCoupang.vue'
 import RelKeyword from '../views/category/RelKeyword.vue'
-import AdminPage from '../views/adminPage/AdminPage.vue'
 import { useAuthPinia } from '../store/authPinia'
 import KakaoCallback from '../views/ongoing/KakaoCallback.vue'
 import JoinPage from '../views/ongoing/JoinPage.vue'
+import BoardCommon from '../views/board/BoardCommon.vue'
+import InsertPost from '../views/board/InsertPost.vue'
+import DetailPost from '../views/board/DetailPost.vue'
+
+import AdminMain from '../views/adminPage/AdminMain.vue'
+import CommonBoard from '../views/adminPage/AdminCommonBoard.vue'
 //import ReviewPop from '../views/reviewPop/RRRRRRRRPop.vue'
 //import { ModalOverlay } from 'components/ModalOverlay.vue'
 
@@ -34,7 +40,7 @@ const router = createRouter({
       component: FrontLayout,
       children:[
         {
-          path: '/categoryList',
+          path: 'categoryList',
           name: 'CategoryList',
           component: CategoryList,
           meta:{
@@ -44,7 +50,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/keywordDetail/:keywordCode',
+          path: 'keywordDetail/:keywordCode',
           name: 'KeywordDetail',
           component: KeywordDetail,
           props: true,
@@ -54,7 +60,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/productListNaver/:keywordCode',
+          path: 'productListNaver/:keywordCode',
           name: 'ProductListNaver',
           component: ProductListNaver,
           props: true,
@@ -64,7 +70,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/productListCoupang/:keywordCode',
+          path: 'productListCoupang/:keywordCode',
           name: 'ProductListCoupang',
           component: ProductListCoupang,
           props: true,
@@ -74,7 +80,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/relKeyword/:keywordCode',
+          path: 'relKeyword/:keywordCode',
           name: 'RelKeyword',
           component: RelKeyword,
           props: true,
@@ -84,15 +90,61 @@ const router = createRouter({
           }
         },
         {
-          path: '/adminPage',
-          name: 'AdminPage',
-          component: AdminPage,
+          path: 'boardCommon/:boardCode',
+          name: 'BoardCommon',
+          component: BoardCommon,
           props: true,
           meta:{
             requiresAuth: true,
-            roles: ['SYSTEM_ADMIN']
+            roles: ['USER_NORMAL','SYSTEM_ADMIN']
           }
         },
+        {
+          path: 'insertPost/:boardCode',
+          name: 'InsertPost',
+          component: InsertPost,
+          props: true,
+          meta:{
+            requiresAuth: true,
+            roles: ['USER_NORMAL','SYSTEM_ADMIN']
+          }
+        },
+        {
+          path: 'detailPost/:postCode',
+          name: 'DetailPost',
+          component: DetailPost,
+          props: true,
+          meta:{
+            requiresAuth: true,
+            roles: ['USER_NORMAL','SYSTEM_ADMIN']
+          }
+        },
+      ]
+    },
+
+    {
+      path: '/admin',
+      name: 'AdminLayout',
+      component: AdminLayout,
+      children:[
+           {
+             path: 'main',
+             name: 'Main',
+             component: AdminMain,
+             meta:{
+              requiresAuth: true,
+              roles: ['SYSTEM_ADMIN']
+             }
+           },
+           {
+             path: 'commonBoard',
+             name: 'CommonBoard',
+             component: CommonBoard,
+             meta:{
+              requiresAuth: true,
+              roles: ['SYSTEM_ADMIN']
+             }
+           },
       ]
     },
     {
@@ -112,7 +164,9 @@ const router = createRouter({
       component: JoinPage
       
     },
+    
   ]
+
 
 });
 

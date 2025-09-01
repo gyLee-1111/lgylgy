@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 <!-- 모달 팝업 -->
 <div class="modal modal_pop_product" id="modal_pop_product" style="display:none;">
 
@@ -218,4 +218,4 @@ export default {
 
 <style scoped>
 
-</style>
+</style> -->
