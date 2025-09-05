@@ -84,7 +84,7 @@
                                 <div class="product_top_info">
 
                                     <div class="product_thum">
-                                        <img v-if="keyword && keyword.keywordImg" :src="'apiBaseUrl/images/' + keyword.keywordImg"alt="키워드 대표 이미지"/>
+                                        <img v-if="keyword && keyword.keywordImg" :src="'$apiBaseUrl/images/' + keyword.keywordImg"alt="키워드 대표 이미지"/>
                                         <p v-else>이미지가 없습니다</p>                        
                                     </div>
 
@@ -392,7 +392,6 @@ export default {
   name: 'KeywordDetail',
   setup() {
     
-       const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
         const age10 = ref(0);
         const age20 = ref(0);
         const age30 = ref(0);
@@ -804,7 +803,6 @@ export default {
             relKeyword,
             getRelKeyword,
             relKeywordList,
-            apiBaseUrl,
         }
     },
    
