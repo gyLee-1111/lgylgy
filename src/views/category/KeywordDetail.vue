@@ -392,7 +392,7 @@ export default {
   name: 'KeywordDetail',
   setup() {
     
-       
+       const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
         const age10 = ref(0);
         const age20 = ref(0);
         const age30 = ref(0);
@@ -803,7 +803,8 @@ export default {
             productListNaver,
             relKeyword,
             getRelKeyword,
-            relKeywordList
+            relKeywordList,
+            apiBaseUrl,
         }
     },
    
