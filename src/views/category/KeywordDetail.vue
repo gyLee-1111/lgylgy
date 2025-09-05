@@ -84,7 +84,7 @@
                                 <div class="product_top_info">
 
                                     <div class="product_thum">
-                                        <img v-if="keyword && keyword.keywordImg" :src="'$apiBaseUrl/images/' + keyword.keywordImg"alt="키워드 대표 이미지"/>
+                                        <img v-if="keyword && keyword.keywordImg" :src="$apiBaseUrl + '/images/' + keyword.keywordImg"alt="키워드 대표 이미지"/>
                                         <p v-else>이미지가 없습니다</p>                        
                                     </div>
 
