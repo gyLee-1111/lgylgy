@@ -29,10 +29,10 @@
                             <div class="board_content">
                                 <div class="board_content" v-html="upperPost.postInfo"></div>
                             </div>
-                            <div class="file_inner" v-if="upperPostFile && upperPostFile.length > 0">
+                            <div class="file_inner">
                                 <div class="file_list">
-                                    <a v-for="item in upperPostFile" :key="item.postCode" @click="fileDownload(item.fileNo)">
-                                        <i class="ri-download-cloud-line"></i> {{ item.fileNm }}</a>
+                                    <a v-for="upperItem in upperPostFile" :key="upperItem.postCode" @click="fileDownload(upperItem.fileNo)">
+                                        <i class="ri-download-cloud-line"></i> {{ upperItem.fileNm }}</a>
                                     <!-- <a href="#"><i class="ri-download-cloud-line"></i> favicon.png</a> -->
                                 </div>
                             </div>
@@ -175,7 +175,7 @@
                                 <div class="right" v-if="post && userId === post.insertUserId">
                                     <button class="btn bg_blue"><i class="ri-edit-line"></i> 수정하기</button>
                                 </div>
-                                <div class="right" v-if="post && post.answerCheck === 'Y'">
+                                <div class="right" v-if="post && post.answerCheck === 'Y' && post.noticeCheck === 'N'">
                                     <button class="btn bg_blue" @click="onClickAnswer"><i class="ri-edit-line"></i> 답변달기</button>
                                 </div>
                             </div>
@@ -197,6 +197,9 @@ import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import 'dropzone/dist/dropzone.css'
 import Dropzone from 'dropzone'
+import { nextTick } from 'vue'
+
+Dropzone.autoDiscover = false;
 
 export default {
     name: "DetailPost",
@@ -204,6 +207,8 @@ export default {
         QuillEditor
     },
     setup() {
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
         const post = ref(null)
         const upperPost = ref(null)
         const route = useRoute()
@@ -223,6 +228,8 @@ export default {
 
         const dropzoneInstance = ref(null)
 
+        const uploadedFiles = ref([])
+
         const answerPost = ref({
             postNm:'',
             postInfo:'',
@@ -231,7 +238,51 @@ export default {
             upperCode:''
         })
 
-        const onClickAnswer = () => {
+        const dropZoneRun = () => {
+            if (dropzoneInstance.value) {
+                dropzoneInstance.value.destroy();
+                dropzoneInstance.value = null;
+            }
+            dropzoneInstance.value = new Dropzone("#demo-upload", {
+                url: apiBaseUrl +'/user/board/insertFile',
+                autoProcessQueue: false,
+                paramName: 'file',
+                maxFiles: 10,
+                maxFilesize: 10, // MB
+            //    acceptedFiles: ".hwp,.doc,.pdf,.jpg,.gif,.png,.txt",
+                acceptedFiles: null,
+                addRemoveLinks: true,
+                dictDefaultMessage: "파일을 드래그하거나 클릭하여 업로드하세요.",
+                dictRemoveFile: "삭제",
+                parallelUploads: 5,
+            
+                init: function () {
+                this.on("sending", (file, xhr, formData) => {
+                    xhr.setRequestHeader("Authorization", `Bearer ${authStore.token}`);
+                    xhr.withCredentials = true; // 필요 시
+                if (this.options.params) {
+                    Object.entries(this.options.params).forEach(([key, value]) => {
+                        formData.append(key, value);
+                    });
+                    }
+                });
+                this.on("success", (file, response) => {
+                    console.log("업로드 성공", file, response)
+            
+                })
+                this.on("error", (file, errorMessage) => {
+                    console.error("업로드 실패", file, errorMessage)
+                })
+                this.on("queuecomplete", () => {
+                    // 모든 파일 업로드가 끝났을 때 호출
+                    alert("모든 파일 업로드가 완료되었습니다.");
+                    goBoardCommon();
+                });
+                }
+            })
+        }
+
+        const onClickAnswer = async () => {
             showAnswerForm.value = true
 
             answerPost.value = {
@@ -242,6 +293,8 @@ export default {
                 upperCode: post.value.postCode
 
             }
+            await nextTick()
+            dropZoneRun()
         }
 
         const getDetailPost = async (postCode) => {
@@ -275,23 +328,31 @@ export default {
                 const res = await api.get('/user/board/fileDownload',{
                     params:{fileNo},
                     responseType: 'blob',
-                    withCredentials: true
                 })
 
-                const disposition = res.headers['content-disposition']
-                const fileNameMatch = disposition && disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)
-                const fileName = fileNameMatch ? decodeURIComponent(fileNameMatch[1].replace(/['"]/g, '')) : 'downloaded_file'
+                const disposition = res.headers.get('content-disposition');
+                console.log('Content-Disposition:', disposition);
 
-                const blob = new Blob([res.data])
+                const fileNameMatch = disposition && disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)
+                const fileName = fileNameMatch ? decodeURIComponent(fileNameMatch[1].replace(/['"]/g, '')) : 'download_file'
+                console.log(res.headers);
+                
+            //    const contentType = res.headers['content-type'] || 'application/octet-stream';
+
+            //    const blob = new Blob([res.data], { type: contentType });
+                const blob = new Blob([res.data]);
                 const url = window.URL.createObjectURL(blob)
 
                 const link = document.createElement('a');
+
                 link.href = url;
 
                 link.download = fileName;
                 document.body.appendChild(link);
                 link.click();
+
                 document.body.removeChild(link)
+                
                 window.URL.revokeObjectURL(url)
 
             } catch(error) {
@@ -376,14 +437,24 @@ export default {
             answerPost.value.dethp = post.value.dethp
             try{
                 const answerPostRes = await api.post('/user/board/insertAnswerPost',answerPost.value)
-                if(answerPostRes.status==200){
-
+                
+                if(answerPostRes.status==200) {
                     alert('답변 등록')
-                    showAnswerForm.value = false
+                    const answerPostCodeValue = answerPostRes.data;
+                    dropzoneInstance.value.options.params = { postCode: answerPostCodeValue };
+                     if (dropzoneInstance.value.getQueuedFiles().length > 0) {
+						
+						dropzoneInstance.value.processQueue();
+                        showAnswerForm.value = false
+                    }else {
+                        alert('답변 등록 파일없음.')
+                        showAnswerForm.value = false
+                    }
+               
                 }else{
                     alert('답변등록 실패')
                 }
-            }catch (error){
+            } catch (error) {
                 console.error(error)
             }
         }
@@ -400,6 +471,7 @@ export default {
         const showRecomment = (commentCode) => {
             if (activeRecommentCode.value === commentCode) {
                 activeRecommentCode.value = null
+                
             } else {
                 activeRecommentCode.value = commentCode
                 selectedCommentCode.value = commentCode
@@ -438,6 +510,8 @@ export default {
             getDetailUpperPost,
             upperPost,
             upperPostFile,
+            dropZoneRun,
+            apiBaseUrl,
 
         }   
     }

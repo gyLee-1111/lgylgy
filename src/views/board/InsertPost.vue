@@ -26,7 +26,7 @@
                                     <th>제목<span class="fc_requisite">*</span></th>
                                     <td><input type="text" v-model="post.postNm" placeholder="제목을 입력해주세요."></td>
                                 </tr>
-                                <tr v-if="useNotice === 'Y'">
+                                <tr v-if="useNotice === 'Y' || noet">
                                     <th>최상단 공개</th>
                                     <td>
                                         <label>
@@ -175,7 +175,7 @@ export default {
         }
         
     }
-
+/*
     const getListPost = async() =>{
         try{
             const res = await api.get('/user/board/getListPost',{
@@ -191,7 +191,7 @@ export default {
             console.error(error)
         }
     }
-
+*/
     const insertPost = async() =>{
         if (!post.value.postNm.trim()) {
                 alert('게시물 제목을 입력해주세요.');
@@ -200,7 +200,7 @@ export default {
         post.value.boardCode = boardCode.value
         try{
             const insertPostResponse = await api.post('/user/board/insertPost',post.value)
-            console.log('insertPostResponse.data.postCode:', insertPostResponse.data.postCode);
+            console.log('insertPostResponse.data.postCode:', insertPostResponse.data);
             if(insertPostResponse.status==200) {
                 alert('게시물이 등록되었습니다.')
 
@@ -209,7 +209,7 @@ export default {
                 if (dropzoneInstance.value.getQueuedFiles().length > 0) {
 						
 						dropzoneInstance.value.processQueue(); 
-                        goBoardCommon();
+                        
                 } else {
                     alert('게시물 등록 파일없음.')
                     goBoardCommon();
@@ -235,11 +235,13 @@ export default {
             autoProcessQueue: false,
             paramName: 'file',
             maxFiles: 10,
-            maxFilesize: 5, // MB
-            acceptedFiles: ".hwp,.doc,.pdf,.jpg,.gif,.png",
+            maxFilesize: 10, // MB
+            acceptedFiles: ".hwp,.doc,.pdf,.jpg,.gif,.png,.txt",
+        //    acceptedFiles: null,
             addRemoveLinks: true,
             dictDefaultMessage: "파일을 드래그하거나 클릭하여 업로드하세요.",
             dictRemoveFile: "삭제",
+            parallelUploads: 5,
            
             init: function () {
             this.on("sending", (file, xhr, formData) => {
@@ -270,14 +272,14 @@ export default {
 
     onMounted(() => {
         getDetailBoard()
-        getListPost()
+    //    getListPost()
         dropZoneRun()
 
     })
     
     return {
         getDetailBoard,
-        getListPost,
+    //    getListPost,
         board,
         boardCode,
         boardNm,

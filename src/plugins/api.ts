@@ -39,13 +39,13 @@ api.interceptors.response.use(
    // const router = useRouter();
 //    const originalRequest = error.config
 console.log(error.response?.status)
-    if (error.response?.status === 401 ) {
+    if (error.response?.status === 401 && !error.config._retry) {
       console.log('토큰 x')
       error.config._retry = true;
 
       try {
         const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/login/refreshToken`,
-        {}, 
+        null, 
         {
              withCredentials: true //  쿠키 자동 포함
         }
@@ -56,7 +56,7 @@ console.log(error.response?.status)
         
         authPinia.setUserData({
           userId: res.data.userId,
-          userRoleList: res.data.userRoleDto,
+          userRoleList: res.data.userRoleList,
           token: newAccessToken,
           currentRole: res.data.currentRole
         });
@@ -73,8 +73,9 @@ console.log(error.response?.status)
           withCredentials: true 
         })
         
+        
         alert("세션이 만료되어 로그인 페이지로 이동합니다.");
-        router.push('/LogIn')
+        router.push('/logIn')
 
         return Promise.reject(refreshError)
       }

@@ -175,10 +175,14 @@ router.beforeEach((to,_from, next) => {
 
   const isLoggedIn = !!authPinia.token;
 
+  if (to.path === '/logIn') {
+    return next();
+  }
+
   if (to.meta.requiresAuth && !isLoggedIn) {
     return next('/logIn');  // 로그인 안 했으면 로그인 페이지로 보내기
   }
-  if (to.meta.roles && to.meta.roles.length > 0) {
+  if (to.meta.requiresAuth && to.meta.roles && to.meta.roles.length > 0) {
     if (!authPinia.currentRole || !to.meta.roles.includes(authPinia.currentRole.roleCode)) {
       return next('/categoryList')  
     }
