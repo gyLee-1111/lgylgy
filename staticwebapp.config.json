@@ -1,14 +1,6 @@
 {
   "routes": [
     {
-      "route": "/js/*",
-      "serve": "/js/"
-    },
-    {
-      "route": "/css/*",
-      "serve": "/css/"
-    },
-    {
       "route": "/*",
       "rewrite": "/index.html"
     }
