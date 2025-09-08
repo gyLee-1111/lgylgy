@@ -17,6 +17,8 @@
 import FrontHeader from './FrontHeader.vue';
 import FrontFooter from './FrontFooter.vue';
 import { useModalStore } from '../../store/modal'
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 export default {
   name: "FrontLayout",
@@ -26,11 +28,21 @@ export default {
     FrontFooter,
   },
   setup() {
+    const router = useRouter();
     const modalStore = useModalStore();
+
+    const goCategoryList = () => {
+        router.push('/categoryList/')
+    }
+    onMounted(() => {
+        goCategoryList()
+   
+    })
 
     
     return {
-      modalStore
+      modalStore,
+      goCategoryList,
     }
   }
 }
