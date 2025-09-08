@@ -240,7 +240,7 @@
                 </li> -->
             </ul>
 
-            <div class="bottom_func">
+            <div class="bottom_func" v-if="authPinia.userId">
                 <ul>
                     <li>
                         <a href="#"><i class="fa-solid fa-pen"></i> <span>정보수정</span></a>
@@ -388,6 +388,7 @@ export default {
     }
     const goLogin = () => {
         router.push('/Login')
+        
     }
     onMounted(() => {
         // 현재 권한이 설정되어 있다면 그것으로 초기화
