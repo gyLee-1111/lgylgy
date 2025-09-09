@@ -24,7 +24,7 @@
                                     <span>{{ selectedCategoryNm || '1차 분류' }}</span>
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </button>
-                                    <div class="sub_select" v-show="openIndex === 1" name="slide-down">
+                                    <div class="sub_select" v-show="openIndex === 1" style="display:none;">
                                         <ul>
                                             <li v-for="item in categoryList1" :key="item.categoryCode" >
                                                 <a href="#" @click.prevent="selectedCategory(item)">{{item.categoryNm}}</a>
@@ -41,7 +41,7 @@
                                     <span>{{ selectedCategoryNm2 || '2차 분류' }}</span>
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </button>
-                                    <div class="sub_select" v-show="openIndex === 2">
+                                    <div class="sub_select" v-show="openIndex === 2" style="display:none;">
                                         <ul>
                                             <li v-for="item in categoryList2" :key="item.categoryCode">
                                                 <a href="#" @click.prevent="selectedCategory2(item)">{{item.categoryNm}}</a>
@@ -58,7 +58,7 @@
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </button>
 
-                                    <div class="sub_select" v-show="openIndex === 3">
+                                    <div class="sub_select" v-show="openIndex === 3" style="display:none;">
                                         <ul>
                                             <li v-for="item in categoryList3" :key="item.categoryCode">
                                                 <a href="#" @click.prevent="selectedCategory3(item)">{{item.categoryNm}}</a>
@@ -74,7 +74,7 @@
                                     <span>{{ selectedCategoryNm4 || '4차 분류' }}</span>
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </button>
-                                    <div class="sub_select" v-show="openIndex === 4">
+                                    <div class="sub_select" v-show="openIndex === 4" style="display:none;">
                                         <ul>
                                             <li v-for="item in categoryList4" :key="item.categoryCode">
                                                 <a href="#" @click.prevent="selectedCategory4(item)">{{item.categoryNm}}</a>
@@ -354,10 +354,7 @@ export default {
     // const Open4 = ref(false)
     const openIndex = ref(null)
     const dropDownOpen = (index) => {
-        openIndex.value = openIndex.value === index? null : index
-    //     if (index === 4 && selectedCategoryCode4.value) {
-    //     getListKeyword();
-    // }
+        openIndex.value = (!openIndex.value) === index? null : index
     }
 
     const selectedCategoryNm = ref('')
@@ -454,6 +451,7 @@ export default {
 
     const selectedCategory = (item) => {
         if(selectedCategoryCode.value === item.categoryCode) {
+            console.log('카테고리 선택 → 드롭다운 닫기');
             openIndex.value = null
             return
         }
@@ -481,6 +479,7 @@ export default {
     }
     const selectedCategory2 = (item) => {
         if(selectedCategoryCode2.value === item.categoryCode) {
+            console.log('카테고리 선택 → 드롭다운 닫기');
             openIndex.value = null
             return
         }
@@ -505,6 +504,7 @@ export default {
     }
     const selectedCategory3 = (item) => {
         if(selectedCategoryCode3.value === item.categoryCode) {
+            console.log('카테고리 선택 → 드롭다운 닫기');
             openIndex.value = null
             return
         }
@@ -523,6 +523,7 @@ export default {
     const selectedCategory4 = (item) => {
         selectedCategoryNm4.value = item.categoryNm
         selectedCategoryCode4.value = item.categoryCode
+        console.log('카테고리 선택 → 드롭다운 닫기');
         openIndex.value = null
           
         getListKeyword();
@@ -940,7 +941,7 @@ export default {
 
 
 <style scoped>
-
+/*
 .slide-down-enter-active, .slide-down-leave-active {
   transition: all 0.9s ease;
   overflow: hidden;
@@ -966,5 +967,5 @@ export default {
   transform: translateY(-20px);
 }
 
-
+*/
 </style>
