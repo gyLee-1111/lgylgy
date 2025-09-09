@@ -239,7 +239,7 @@ export default {
     }
 
     function logOut() {
-        openMobileMenu()
+        isMenuOpen.value = false
        
         authPinia.clearUserData();
         axios.post(`${baseURL}/login/logOut`,null,
@@ -323,7 +323,7 @@ export default {
         openMenuCode.value = openMenuCode.value === menuCode ? null : menuCode
     }
     const goLogin = () => {
-        openMobileMenu()
+        isMenuOpen.value = false
         router.push('/Login')
     }
     onMounted(() => {
