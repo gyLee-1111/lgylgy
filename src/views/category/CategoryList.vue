@@ -703,7 +703,7 @@ export default {
             if(response.status==200) {
    
                 res.value = response.data
-                  alert(parentCode)
+        //          alert(parentCode)
               
             } else {
     //        alert(parentCode + '어디서 오류')
