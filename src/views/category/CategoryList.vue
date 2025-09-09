@@ -659,6 +659,7 @@ export default {
     }
     const getListKeyword = async() =>{
 
+        
          let parentCode = '';
 
             if (selectedCategoryCode4.value) {

@@ -34,42 +34,13 @@
                         </div>
                     </li>
                     
-                    <!-- <li>
-                        <a href="#" class="title">키워드</a>
-                        <div class="submenu" style="opacity: 1;">
-                            <ul class="">
-                                <li><a href="#" class="">키워드 찾기</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <a href="#" class="title">커뮤니티</a>
-                        <div class="submenu" style="opacity: 1;">
-                            <ul class="">
-                                <li><a href="#" class="">공지사항</a></li>
-                                <li><a href="#" class="">게시판</a></li>
-                                <li><a href="#" class="">셀러들 마당</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <a href="#" class="title">마이페이지</a>
-                        <div class="submenu" style="opacity: 1;">
-                            <ul class="">
-                                <li>
-                                    <a href="#" class="">정보수정</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li> -->
-                    
                     <li class="func_box">
                         <div v-if="authPinia.userId">
 
                                 <!-- 로그인 후 -->
-                            <a href="#" class="btn_login_after" @click.prevent="showdownInfo"><i class="fa-regular fa-circle-user" ></i> <span>{{ authPinia.userId }}님</span></a>
+                            <a href="#" class="btn_login_after"><i class="fa-regular fa-circle-user" ></i> <span>{{ authPinia.userId }}님</span></a>
                           
-                            <div v-if="showUserInfo" class="user_info_pop" >
+                            <div class="user_info_pop"  style="display:none;">
                                 <ol>
                                     <router-link to="/admin/main">
                                         <li v-if="authPinia.currentRole.roleGroup === 'ADMIN'"><a href="#"><i class="fa-solid fa-user-tie"></i> 관리자 페이지</a></li>
@@ -93,14 +64,14 @@
                             <!-- 로그인 전 -->
                             <a href="#" class="btn_login" ><router-link to="/LogIn">로그인</router-link></a>                        
                             <!--// 로그인 전 -->
-                        </div>   
+                        </div>
                     </li>
                 </ul>
             </nav>
             <!--// GNB -->
             
             <!-- 모바일용 햄버거 메뉴 -->
-            <a href="#" class="btn_sidemenu" @click.prevent="openMobileMenu">
+            <a href="#" class="btn_sidemenu" @click.prevent="openMobileMenu" >
                 <i class="fa-solid fa-bars"></i>
             </a>
             <!--// 모바일용 햄버거 메뉴 -->
@@ -112,7 +83,7 @@
 
     <!-- GNB:mobile -->
     <!-- <nav class="gnbarea_mobile" style="right: -300px; display: none;"> -->
-        <nav class="gnbarea_mobile" v-show = "isMenuOpen" :style="menuStyle">
+        <nav class="gnbarea_mobile" style="display:none;" >
         <div class="outline">
             <div class="self_info_area" >
 
@@ -146,17 +117,17 @@
                             <button class="btn_main_login" @click="goLogin">로그인</button>
                         </div>
                         <div class="sns_login_row">
-                        <ul>
-                            <li class="kakao">
-                                <a href="#">
-                                    <span class="sns_icon">
-                                        <img src="/images/login/sns_icon_kakao.png" alt="">
-                                    </span>
-                                    <span class="name" @click="kakaoLogin">카카오로 시작하기</span>
-                                </a>
-                            </li>
-                        </ul>                    
-                    </div>
+                            <ul>
+                                <li class="kakao">
+                                    <a href="#">
+                                        <span class="sns_icon">
+                                            <img src="/images/login/sns_icon_kakao.png" alt="">
+                                        </span>
+                                        <span class="name" @click="kakaoLogin">카카오로 시작하기</span>
+                                    </a>
+                                </li>
+                            </ul>                    
+                        </div>
 
                     </div>
                     <!--// 로그인 전 -->
@@ -205,39 +176,6 @@
                         </ul>
                     </div>
                 </li>
-                
-
-                <!-- <li>
-                    <a href="#" class="title active">
-                        <span>키워드</span>
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </a>
-                    <div class="submenu" style="opacity: 0;">
-                        <ul class="">
-                            <li>
-                                <a href="#" class="active">키워드 찾기</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a href="#" class="title"><span>커뮤니티</span> <i class="fa-solid fa-chevron-down"></i></a>
-                    <div class="submenu" style="">
-                        <ul class="">
-                            <li><a href="#">공지사항</a></li>
-                            <li><a href="#">게시판</a></li>
-                            <li><a href="#">셀러들 마당</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a href="#" class="title"><span>마이페이지</span> <i class="fa-solid fa-chevron-down"></i></a>
-                    <div class="submenu" style="">
-                        <ul class="">
-                            <li><a href="#">정보수정</a></li>
-                        </ul>
-                    </div>
-                </li> -->
             </ul>
 
             <div class="bottom_func" v-if="authPinia.userId">
@@ -283,11 +221,12 @@ export default {
 
   //  console.log('userRoles:', authPinia.userRoles)
     const isMenuOpen = ref(false)
-    const menuStyle = computed(() => ({
-        right: isMenuOpen.value ? '0' : '-300px',
-    }))
+    // const menuStyle = computed(() => ({
+    //     right: isMenuOpen.value ? '0' : '-300px',
+    // }))
     const openMobileMenu = () => {
         isMenuOpen.value = !isMenuOpen.value
+       // showUserInfo.value = !showUserInfo.value
     }
 
 //    const REST_API_KEY = "fe59b027894ddb6206595e9c8c0f113e";
@@ -298,8 +237,6 @@ export default {
       window.location.href = kakaoLoginUrl;
     }
 
-    
-
     function logOut() {
         isMenuOpen.value = !isMenuOpen.value
         authPinia.clearUserData();
@@ -308,12 +245,11 @@ export default {
           withCredentials: true 
         })
     //    alert("logout");
-
         router.push('/LogIn');
     }
-    function showdownInfo() {
-        showUserInfo.value = !showUserInfo.value
-    }
+    // function showdownInfo() {
+    //     showUserInfo.value = !showUserInfo.value
+    // }
     async  function changeRole() {
         const selected = authPinia.userRoles.find(role => role.roleCode === selectRole.value)
         if (!selected) return
@@ -349,8 +285,6 @@ export default {
             } catch (error) {
                 console.error('권한변경 실패 상세:', error)
         }
-        
-        
     }
     const getUserMenu = async () => {
     //     alert("asdasdas")
@@ -388,7 +322,6 @@ export default {
     }
     const goLogin = () => {
         router.push('/Login')
-        
     }
     onMounted(() => {
         // 현재 권한이 설정되어 있다면 그것으로 초기화
@@ -397,24 +330,20 @@ export default {
         if (current && current.roleCode) {
             selectRole.value = current.roleCode;
         }
-       
         getUserMenu()
-        
     }) 
-  
-
 
     return {
         authPinia,
         showUserInfo,
-        showdownInfo,
+    //    showdownInfo,
         logOut,
         changeRole,
         selectRole,
         goAdminPage,
         openMobileMenu,
         isMenuOpen,
-        menuStyle,
+    //    menuStyle,
         goMenuPage,
         activeMenuCode,
 
@@ -424,14 +353,7 @@ export default {
         kakaoLogin,
         }
 
-
     },
-
-    
-
-    
-
-
 
 }
 

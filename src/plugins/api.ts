@@ -19,6 +19,7 @@ api.interceptors.request.use(
     if(authPinia.token) {
     //  alert(authPinia.token);  
       config.headers.Authorization = `Bearer ${authPinia.token}`;
+//      console.log('🚀 요청 Authorization:', config.headers.Authorization);
     }
     return config;
   },

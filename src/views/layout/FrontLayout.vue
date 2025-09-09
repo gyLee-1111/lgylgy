@@ -5,7 +5,7 @@
 
         <main>  
         <div class="modal_screen" v-if="modalStore.isModalBackGround"></div>
-          <router-view/>
+          <router-view :key="$route.fullPath" />
 
         </main>
     </div>
