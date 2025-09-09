@@ -698,19 +698,19 @@ export default {
             
         try{
             const response = await api.post('/user/keyword/getListKeyword', params)
-         //   alert(parentCode +'여기는')
+    //        alert(parentCode +'여기는')
     
             if(response.status==200) {
    
                 res.value = response.data
-        //          alert(parentCode)
+                  alert(parentCode)
               
             } else {
-        //    alert(parentCode + '어디서 오류')
+    //        alert(parentCode + '어디서 오류')
             }
 
         } catch (error){
-        //    alert(parentCode + '여기서 오류')
+    //       alert(parentCode + '여기서 오류')
             console.error('getListKeyword API 호출 에러:', error);
   alert('키워드 목록을 불러오는 중 오류가 발생했습니다.');
            if (error.response) {
@@ -794,7 +794,7 @@ export default {
                 checkSelect: checkSelect.value,
             };
 
-            const response = await api.get('/public/keyword/downloadKeywordExcel', {
+            const response = await api.get('/user/keyword/downloadKeywordExcel', {
                 params: params,
                 responseType: 'blob'
             });

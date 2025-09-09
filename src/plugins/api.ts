@@ -29,16 +29,13 @@ api.interceptors.response.use(
  async response => {
 
   //alert(response);
-  
-  
-
     return response
  }, 
   async error => {
     const authPinia = useAuthPinia();
-   // const router = useRouter();
+  //  const router = useRouter();
 //    const originalRequest = error.config
-console.log(error.response?.status)
+    console.log(error.response?.status)
     if (error.response?.status === 401 && !error.config._retry) {
       console.log('토큰 x')
       error.config._retry = true;
@@ -47,10 +44,9 @@ console.log(error.response?.status)
         const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/login/refreshToken`,
         null, 
         {
-             withCredentials: true //  쿠키 자동 포함
+          withCredentials: true //  쿠키 자동 포함
         }
         )
-
         
         const newAccessToken = res.data.token
         
@@ -82,7 +78,7 @@ console.log(error.response?.status)
     }
     else if(error.response?.status === 403){
       console.log(error.response);
-      alert("잘못된 접근입니다.");
+      alert("잘못된 접근입니다.1");
       router.push('/categoryList');
       return Promise.reject(error);
     }
