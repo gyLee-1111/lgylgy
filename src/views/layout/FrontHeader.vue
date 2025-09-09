@@ -240,6 +240,7 @@ export default {
 
     function logOut() {
         isMenuOpen.value = !isMenuOpen.value
+       
         authPinia.clearUserData();
         axios.post(`${baseURL}/login/logOut`,null,
             {
@@ -322,7 +323,7 @@ export default {
         openMenuCode.value = openMenuCode.value === menuCode ? null : menuCode
     }
     const goLogin = () => {
-        closeModalBackGround()
+        isMenuOpen.value = !isMenuOpen.value
         router.push('/Login')
     }
     onMounted(() => {
