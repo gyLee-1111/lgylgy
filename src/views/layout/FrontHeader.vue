@@ -62,7 +62,7 @@
                         </div>
                         <div v-else>
                             <!-- 로그인 전 -->
-                            <a href="#" class="btn_login" ><router-link to="/LogIn">로그인</router-link></a>                        
+                            <a href="#" class="btn_login" ><button @click="goLogin">로그인</button></a>                        
                             <!--// 로그인 전 -->
                         </div>
                     </li>
@@ -200,6 +200,7 @@ import axios from 'axios'
 import { onMounted, ref, computed } from 'vue'
 import api from '../../plugins/api'
 import { useRouter } from 'vue-router'
+import { closeModalBackGround } from '../../utils/globalFunctions'
 
 
 
@@ -321,6 +322,7 @@ export default {
         openMenuCode.value = openMenuCode.value === menuCode ? null : menuCode
     }
     const goLogin = () => {
+        closeModalBackGround()
         router.push('/Login')
     }
     onMounted(() => {
