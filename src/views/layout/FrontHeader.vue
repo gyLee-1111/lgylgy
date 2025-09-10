@@ -45,7 +45,7 @@
                                     <router-link to="/admin/main">
                                         <li v-if="authPinia.currentRole.roleGroup === 'ADMIN'"><a href="#"><i class="fa-solid fa-user-tie"></i> 관리자 페이지</a></li>
                                     </router-link>
-                                    <li><a href="#"><i class="fa-solid fa-gear"></i> 정보수정</a></li>                                        
+                                    <li><a href="#" @click.prevent="userInfo"><i class="fa-solid fa-gear"></i> 정보수정</a></li>                                        
                                     <li><a href="#" @click.prevent="logOut"><i class="fa-solid fa-power-off"></i> 로그아웃</a></li>
                                 </ol>
                                 <!-- 권한선택 -->
@@ -167,8 +167,9 @@
                         <span @click.prevent="toggleMenu(menu.menuCode)">{{ menu.menuNm }}</span>
                         <i class="fa-solid fa-chevron-down"></i>
                     </a>
-                    <div class="submenu" v-if="menu.children && menu.children.length" :style="{
-                        display: (menu.children.some(child => child.menuCode === authPinia.activeMenuCode) || openMenuCode === menu.menuCode) ? 'block' : 'none'}">
+                    <div class="submenu" v-if="menu.children && menu.children.length" style="display:none;">
+                    <!-- <div class="submenu" v-if="menu.children && menu.children.length" :style="{
+                        display: (menu.children.some(child => child.menuCode === authPinia.activeMenuCode) || openMenuCode === menu.menuCode) ? 'block' : 'none'}"> -->
                         <ul class="">
                             <li v-for="child in menu.children" :key="child.menuCode">
                                 <a href="#" :class="{ active: authPinia.activeMenuCode === child.menuCode }" @click.prevent="goMenuPage(child.path, child.menuCode)">{{ child.menuNm }}</a>
@@ -181,7 +182,7 @@
             <div class="bottom_func" v-if="authPinia.userId">
                 <ul>
                     <li>
-                        <a href="#"><i class="fa-solid fa-pen"></i> <span>정보수정</span></a>
+                        <a href="#" @click.prevent="userInfo"><i class="fa-solid fa-pen"></i> <span>정보수정</span></a>
                     </li>
                     <li>
                         <a href="#" @click.prevent="logOut"><i class="fa-solid fa-power-off"></i> <span>로그아웃</span></a>
@@ -237,10 +238,26 @@ export default {
       const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoRestApiKey}&redirect_uri=${kakaoRedirectUrl}&response_type=code&prompt=login`;
       window.location.href = kakaoLoginUrl;
     }
+    const userInfo = async() => {
+     
+        isMenuOpen.value = false;
+        const modalEl = document.querySelector('.modal_screen_sidemenu');
+            if (modalEl) {
+            modalEl.style.display = 'none';
+        }
+        router.push('/userInfo')
+  
+    }
 
     function logOut() {
-        isMenuOpen.value = false
-       
+     
+        isMenuOpen.value = false;
+        const modalEl = document.querySelector('.modal_screen_sidemenu');
+            if (modalEl) {
+            modalEl.style.display = 'none';
+        }
+        closeModalBackGround();
+        
         authPinia.clearUserData();
         axios.post(`${baseURL}/login/logOut`,null,
             {
@@ -323,7 +340,12 @@ export default {
         openMenuCode.value = openMenuCode.value === menuCode ? null : menuCode
     }
     const goLogin = () => {
+        alert("######!!@@##")
         isMenuOpen.value = false
+         const modalEl = document.querySelector('.modal_screen_sidemenu');
+            if (modalEl) {
+            modalEl.style.display = 'none';
+        }
         router.push('/Login')
     }
     onMounted(() => {
@@ -354,6 +376,7 @@ export default {
         openMenuCode,
         goLogin,
         kakaoLogin,
+        userInfo,
         }
 
     },

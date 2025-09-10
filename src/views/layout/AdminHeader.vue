@@ -69,7 +69,7 @@
                                 <!-- 로그인 후 -->
                             <a href="#" class="btn_login_after" @click.prevent="showdownInfo"><i class="fa-regular fa-circle-user" ></i> <span>{{ authPinia.userId }}님</span></a>
                           
-                            <div v-if="showUserInfo" class="user_info_pop" >
+                            <div v-if="showUserInfo" class="user_info_pop" style="display:none;">
                                 <ol>
                                     <router-link to="/admin/main">
                                         <li v-if="authPinia.currentRole.roleGroup === 'ADMIN'"><a href="#"><i class="fa-solid fa-user-tie"></i> 일반 페이지</a></li>
@@ -112,7 +112,7 @@
 
     <!-- GNB:mobile -->
     <!-- <nav class="gnbarea_mobile" style="right: -300px; display: none;"> -->
-        <nav class="gnbarea_mobile" v-show = "isMenuOpen" :style="menuStyle">
+        <nav class="gnbarea_mobile" style="display:none;">
         <div class="outline">
             <div class="self_info_area" >
 
@@ -168,8 +168,9 @@
                         <span @click.prevent="toggleMenu(menu.menuCode)">{{ menu.menuNm }}</span>
                         <i class="fa-solid fa-chevron-down"></i>
                     </a>
-                    <div class="submenu" v-if="menu.children && menu.children.length" :style="{
-                        display: (menu.children.some(child => child.menuCode === authPinia.activeMenuCode) || openMenuCode === menu.menuCode) ? 'block' : 'none'}">
+                    <div class="submenu" v-if="menu.children && menu.children.length" style="display:none;">
+                    <!-- <div class="submenu" v-if="menu.children && menu.children.length" :style="{
+                        display: (menu.children.some(child => child.menuCode === authPinia.activeMenuCode) || openMenuCode === menu.menuCode) ? 'block' : 'none'}"> -->
                         <ul class="">
                             <li v-for="child in menu.children" :key="child.menuCode">
                                 <a href="#" :class="{ active: authPinia.activeMenuCode === child.menuCode }" @click.prevent="goMenuPage(child.path, child.menuCode)">{{ child.menuNm }}</a>

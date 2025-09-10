@@ -26,7 +26,12 @@ onMounted(async () => {
      // localStorage.setItem('accessToken', accessToken);
       alert(`${nickname}님 환영합니다!`);
       authPinia.setUserData(response.data)
-      router.push('/categoryList');
+      router.push('/categoryList').then(() => {
+            setTimeout(() =>{ 
+              window.location.reload()
+            }, 1000);
+          })
+
     } catch (err) {
       console.error('로그인 실패', err);
     }

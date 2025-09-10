@@ -20,17 +20,17 @@
 
                             <!-- 1차 분류 -->
                             <div class="ui_select">
-                                <button class="title_select" :class="{active: openIndex === 1}" @click="dropDownOpen(1)">
+                                <button class="title_select " :class="{active: openIndex == 1}" @click="dropDownOpen(1)">
                                     <span>{{ selectedCategoryNm || '1차 분류' }}</span>
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </button>
-                                    <div class="sub_select" v-show="openIndex === 1" style="display:none;">
-                                        <ul>
-                                            <li v-for="item in categoryList1" :key="item.categoryCode" >
-                                                <a href="#" @click.prevent="selectedCategory(item)">{{item.categoryNm}}</a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <div class="sub_select" v-if="openIndex == 1" style="display:none;">
+                                    <ul>
+                                        <li v-for="item in categoryList1" :key="item.categoryCode" >
+                                            <a href="#" @click.prevent="selectedCategory(item)">{{item.categoryNm}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
                            
                             </div>
                             <!--// 1차 분류 -->
@@ -41,13 +41,13 @@
                                     <span>{{ selectedCategoryNm2 || '2차 분류' }}</span>
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </button>
-                                    <div class="sub_select" v-show="openIndex === 2" style="display:none;">
-                                        <ul>
-                                            <li v-for="item in categoryList2" :key="item.categoryCode">
-                                                <a href="#" @click.prevent="selectedCategory2(item)">{{item.categoryNm}}</a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <div class="sub_select" v-if="openIndex === 2" style="display:none;">
+                                    <ul>
+                                        <li v-for="item in categoryList2" :key="item.categoryCode">
+                                            <a href="#" @click.prevent="selectedCategory2(item)">{{item.categoryNm}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                             <!--// 2차 분류 -->
 
@@ -58,13 +58,13 @@
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </button>
 
-                                    <div class="sub_select" v-show="openIndex === 3" style="display:none;">
-                                        <ul>
-                                            <li v-for="item in categoryList3" :key="item.categoryCode">
-                                                <a href="#" @click.prevent="selectedCategory3(item)">{{item.categoryNm}}</a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <div class="sub_select" v-if="openIndex === 3" style="display:none;">
+                                    <ul>
+                                        <li v-for="item in categoryList3" :key="item.categoryCode">
+                                            <a href="#" @click.prevent="selectedCategory3(item)">{{item.categoryNm}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                             <!--// 3차 분류 -->
 
@@ -74,13 +74,13 @@
                                     <span>{{ selectedCategoryNm4 || '4차 분류' }}</span>
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </button>
-                                    <div class="sub_select" v-show="openIndex === 4" style="display:none;">
-                                        <ul>
-                                            <li v-for="item in categoryList4" :key="item.categoryCode">
-                                                <a href="#" @click.prevent="selectedCategory4(item)">{{item.categoryNm}}</a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <div class="sub_select" v-if="openIndex === 4" style="display:none;">
+                                    <ul>
+                                        <li v-for="item in categoryList4" :key="item.categoryCode">
+                                            <a href="#" @click.prevent="selectedCategory4(item)">{{item.categoryNm}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                             <!--// 4차 분류 -->
 
@@ -354,7 +354,8 @@ export default {
     // const Open4 = ref(false)
     const openIndex = ref(null)
     const dropDownOpen = (index) => {
-        openIndex.value = (!openIndex.value) === index? null : index
+        openIndex.value = (openIndex.value) === index? null : index
+        
     }
 
     const selectedCategoryNm = ref('')

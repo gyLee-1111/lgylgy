@@ -119,6 +119,8 @@ export default {
     const kakaoLogin = () => {
       const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoRestApiKey}&redirect_uri=${kakaoRedirectUrl}&response_type=code&prompt=login`;
       window.location.href = kakaoLoginUrl;
+
+      
     }
 
     const Login = async () => {
@@ -166,9 +168,13 @@ export default {
           authPinia.setUserData(response.data)
   //        alert(authPinia.currentRole);
 
-          await nextTick()
-          router.push('/categoryList')
-      }
+   //       await nextTick()
+          router.push('/categoryList').then(() => {
+            setTimeout(() =>{ 
+              window.location.reload()
+            }, 1000);
+          })
+        }
       } catch (error) {
         console.error('로그인 실패 상세:', error)
 

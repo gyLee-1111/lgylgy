@@ -16,6 +16,7 @@ import JoinPage from '../views/ongoing/JoinPage.vue'
 import BoardCommon from '../views/board/BoardCommon.vue'
 import InsertPost from '../views/board/InsertPost.vue'
 import DetailPost from '../views/board/DetailPost.vue'
+import UserInfo from '../views/ongoing/UserInfo.vue'
 
 import AdminMain from '../views/adminPage/AdminMain.vue'
 import CommonBoard from '../views/adminPage/AdminCommonBoard.vue'
@@ -119,6 +120,17 @@ const router = createRouter({
             roles: ['USER_NORMAL','SYSTEM_ADMIN']
           }
         },
+        {
+          path: 'userInfo',
+          name: 'UserInfo',
+          component: UserInfo,
+          props: true,
+          meta:{
+            requiresAuth: true,
+            roles: ['USER_NORMAL','SYSTEM_ADMIN'],
+            activeMenuCode: 8
+          }
+        },
       ]
     },
 
@@ -158,7 +170,7 @@ const router = createRouter({
       component: LogIn
       
     },
-     {
+    {
       path: '/joinPage',
       name: 'JoinPage',
       component: JoinPage

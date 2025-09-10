@@ -35,7 +35,9 @@ export default {
         router.push('/categoryList/')
     }
     onMounted(() => {
-        goCategoryList()
+        if (router.currentRoute.value.path === '/') {
+          goCategoryList()
+        }
    
     })
 
