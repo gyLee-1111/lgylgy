@@ -3,18 +3,18 @@
     <div class="membership_page">
 
         <div class="form_content">
-
-            <div class="member_title">패스워드</div> <button @click="changePassword">패스워드 변경</button>
+            <div v-if="userInfo.membership === 'MEMBERSHIP_01'">
+                <div class="member_title">패스워드</div> <button @click="changePassword">패스워드 변경</button>
+                    <div class="inner_full">
+                        
+                        <input type="password" class="" :disabled="!emptyPassword" v-model="userInfo.userPassword" placeholder="비밀번호 입력" />
+                    </div>
                 <div class="inner_full">
-                    
-                    <input type="password" class="" :disabled="!emptyPassword" v-model="userInfo.userPassword" placeholder="비밀번호 입력" />
+                    <input type="password" class="" :disabled="!emptyPassword" v-model="userInfo.normalPassword" placeholder="비밀번호 확인 입력" />
                 </div>
-            <div class="inner_full">
-                <input type="password" class="" :disabled="!emptyPassword" v-model="userInfo.normalPassword" placeholder="비밀번호 확인 입력" />
+                
+                <div class="confirm_msg" v-if="passwordError">* 비밀번호가 일치하지 않습니다.</div>
             </div>
-               
-            <div class="confirm_msg" v-if="passwordError">* 비밀번호가 일치하지 않습니다.</div>
-
             <div class="member_title">이름</div>
                 <div class="inner_full">
                     <input type="text" class="" v-model="userInfo.userNm" placeholder="이름 입력" />
@@ -97,7 +97,7 @@ export default {
             phoneNumber:'',
             userBirth:'',
             userGender:'',
-            membarship:''
+            membership:''
         });
 
 
@@ -138,14 +138,18 @@ export default {
                 userInfo.phoneNumber = userData.phoneNumber
                 userInfo.userBirth = userData.userBirth
                 userInfo.userGender = userData.userGender
-                userInfo.membarship = userData.membarship
+                userInfo.membership = userData.membership
 
                 if (userData.userBirth) {
                     const birthParts = userData.userBirth.split('-')
                     birthYear.value = birthParts[0] || ''
                     birthMonth.value = birthParts[1] ? Number(birthParts[1]) : ''
                     birthDay.value = birthParts[2] ? Number(birthParts[2]) : ''
-                }
+                } else {
+                    birthYear.value = ''
+                    birthMonth.value = ''
+                    birthDay.value = ''
+                    }
 
             } catch(error) {
                 console.error('유저 정보 조회 오류:', error)
@@ -157,10 +161,12 @@ export default {
         }
         const emptyPassword = ref(false)
         const changePassword = () => {
+            if (confirm('비밀번호를 변경하시겠습니까?')) {
             emptyPassword.value = true
             userInfo.userPassword = ''
             userInfo.normalPassword = ''
             isPasswordChange.value = true;
+            }
         }
         watchEffect(() => {
             if (!userInfo.normalPassword) {
@@ -208,6 +214,10 @@ export default {
             if (!userBirth.value) {
                 alert('생년월일을 모두 선택하세요.')
                 return
+            }
+            if (!userInfo.userGender) {
+                alert('성별을 선택해 주세요.');
+                return;
             }
             
             // 회원정보 수정 로직...
