@@ -6,8 +6,6 @@
         <div class="content_box_white">
             <div class="content_inline">
             <h1>{{boardNm}}</h1>
-            <h2 class="title_pg">게시판용 formcontents</h2>
-            <span class="ment">각종 게시판용 input, textarea, select 등 모음</span>                    
             </div>
         </div>
 
@@ -95,15 +93,15 @@
 
                         <!-- 게시판 페이징-->
                         <div class="table_paging">
-                            <a href="#" class="btn_pgmove"><i class="fa-solid fa-angles-left"></i></a>
-                            <a href="#" class="btn_pgmove"><i class="fa-solid fa-chevron-left"></i></a>
+                            <a href="#" class="btn_pgmove" @click="goingPage(1)"><i class="fa-solid fa-angles-left"></i></a>
+                            <a href="#" class="btn_pgmove" @click="goingPage(currentPage - 1)"><i class="fa-solid fa-chevron-left"></i></a>
 
                             <span class="pagenum">
-                                <a v-for="page in setPage" :key="page" href="#":class="{ actiive:page ===currentPage }" @click.prevent="goingPage(page)">{{ page }}</a>
+                                <a v-for="page in setPage" :key="page" href="#":class="{ active:page ===currentPage }" @click.prevent="goingPage(page)">{{ page }}</a>
                             </span>
 
-                            <a href="#" class="btn_pgmove"><i class="fa-solid fa-chevron-right"></i></a>
-                            <a href="#" class="btn_pgmove"><i class="fa-solid fa-angles-right"></i></a>
+                            <a href="#" class="btn_pgmove" @click="goingPage(currentPage + 1)"><i class="fa-solid fa-chevron-right"></i></a>
+                            <a href="#" class="btn_pgmove" @click="goingPage(pageCount)"><i class="fa-solid fa-angles-right"></i></a>
                         </div>
                         <!--// 게시판 페이징-->
 
@@ -315,6 +313,7 @@ export default {
         postList,
         goInsertPost,
         detailPost,
+
         searchType,
         searchValue,
         totalCount,

@@ -8,7 +8,7 @@
             <!-- 사이트 로고 -->
             <h1 class="logo">
                 <router-link to="/CategoryList">
-                    adasdasdasdasd<img src="/images/common/logo.png" />
+                    관리자용 페이지<img src="/images/common/logo.png" />
                 </router-link>
             </h1>
 
@@ -71,7 +71,7 @@
                           
                             <div v-if="showUserInfo" class="user_info_pop" style="display:none;">
                                 <ol>
-                                    <router-link to="/admin/main">
+                                    <router-link to="/CategoryList">
                                         <li v-if="authPinia.currentRole.roleGroup === 'ADMIN'"><a href="#"><i class="fa-solid fa-user-tie"></i> 일반 페이지</a></li>
                                     </router-link>
                                     <li><a href="#"><i class="fa-solid fa-gear"></i> 정보수정</a></li>                                        
@@ -119,9 +119,9 @@
                 <!-- 상단 타이틀 -->
                 <div class="logo_mobile">
                     <h1 class="">
-                        <router-link to="/CategoryList">
+                        <a @click="goHomePage">
                             <img src="/images/common/logo_sidemenu.png" />
-                        </router-link>
+                        </a>
                     </h1>
                 </div>
                 <!--// 상단 타이틀 -->
@@ -151,7 +151,7 @@
                         </div>
                         <!--// 권한선택 -->
                         <div class="bottom">
-                            <button v-if="authPinia.currentRole.roleGroup === 'ADMIN'" class="btn_myclass" @click="goAdminPage"><i class="fa-solid fa-user-tie"></i> 일반 페이지로 이동</button>
+                            <button v-if="authPinia.currentRole.roleGroup === 'ADMIN'" class="btn_myclass" @click="goHomePage"><i class="fa-solid fa-user-tie"></i> 일반 페이지로 이동</button>
                         </div>
                     </div>
                     <!--// 로그인 후 -->
@@ -179,38 +179,7 @@
                     </div>
                 </li>
                 
-
-                <!-- <li>
-                    <a href="#" class="title active">
-                        <span>키워드</span>
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </a>
-                    <div class="submenu" style="opacity: 0;">
-                        <ul class="">
-                            <li>
-                                <a href="#" class="active">키워드 찾기</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a href="#" class="title"><span>커뮤니티</span> <i class="fa-solid fa-chevron-down"></i></a>
-                    <div class="submenu" style="">
-                        <ul class="">
-                            <li><a href="#">공지사항</a></li>
-                            <li><a href="#">게시판</a></li>
-                            <li><a href="#">셀러들 마당</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a href="#" class="title"><span>마이페이지</span> <i class="fa-solid fa-chevron-down"></i></a>
-                    <div class="submenu" style="">
-                        <ul class="">
-                            <li><a href="#">정보수정</a></li>
-                        </ul>
-                    </div>
-                </li> -->
+                
             </ul>
 
             <div class="bottom_func">
@@ -339,8 +308,13 @@ export default {
         }
         //alert("asdasdas")
     }
-    const goAdminPage = () => {
-        router.push('/admin/main')
+    const goHomePage = () => {
+        isMenuOpen.value = false;
+        const modalEl = document.querySelector('.modal_screen_sidemenu');
+            if (modalEl) {
+            modalEl.style.display = 'none';
+        }
+        router.push('/CategoryList')
     }
     const activeMenuCode = ref(null)
 
@@ -378,7 +352,7 @@ export default {
         logOut,
         changeRole,
         selectRole,
-        goAdminPage,
+        goHomePage,
         openMobileMenu,
         isMenuOpen,
         menuStyle,

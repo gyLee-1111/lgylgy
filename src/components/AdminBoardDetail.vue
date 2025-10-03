@@ -130,10 +130,10 @@ export default {
             type: String,
             required: true
         },
-        showMarketInfo: {
-            type: Boolean,
-            default: true
-        }
+        // showMarketInfo: {
+        //     type: Boolean,
+        //     default: true
+        // }
     },
     emits: ['close'],
     setup(props, { emit }) {
@@ -158,11 +158,14 @@ export default {
         const getDetailBoard = async (boardCode) => {
             try {
                 const response = await api.get('/admin/getDetailBoard',{
-                params: { boardCode }
+                    params: { boardCode }
                 })
+
                 const data = response.data
                 const boardData = data.adminBoardDto;
                 const roleData = data.adminBoardRoleDto;
+                const allRoles = data.allBoardRoleDto;
+
                 console.log('받은 boardData:', boardData); // 확인
 
                 board.boardCode = boardData.boardCode
@@ -172,11 +175,15 @@ export default {
                 board.useNotice = boardData.useNotice
                 board.useSecret = boardData.useSecret
                 console.log(board)
-                roleList.value = roleData;
+                roleList.value = allRoles;
+
+                allRoles.forEach((role) => {
+                    boardrole[role.roleCode] = 'N';
+                });
 
                 roleData.forEach((role) => {
-                    boardrole[role.roleCode] = role.boardroleCode;
-                    
+                    const match = roleData.find(r => r.roleCode === role.roleCode);
+                    boardrole[role.roleCode] = match ? match.boardroleCode : 'N';
                 });
             } catch(error) {
                 console.error('게시판 상세 조회 오류:', error)
@@ -194,7 +201,10 @@ export default {
             const boardRoles = [];
             for (let i = 0; i < entries.length; i++) {
                 const [roleCode, boardroleCode] = entries[i];
-                boardRoles.push({boardCode: board.boardCode, roleCode: roleCode, boardroleCode: boardroleCode });
+                if(boardroleCode !== 'N') {
+                boardRoles.push({boardCode: board.boardCode, roleCode: roleCode, boardroleCode: boardroleCode })
+                }
+                
             }
             const params = {
                 adminBoardDto: board,
@@ -227,7 +237,6 @@ export default {
                 alert('게시판 삭제 실패.');
             }
         };
-     
 
         onMounted(() => {
             console.log('InsertAdminBoard mounted')
@@ -235,6 +244,7 @@ export default {
             
         })
         return {
+
             closeDetailModal,
             board,
             getDetailBoard,
@@ -242,6 +252,7 @@ export default {
             deleteBoard,
             roleList,
             boardrole,
+
         }
 
     }

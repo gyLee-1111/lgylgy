@@ -323,6 +323,11 @@ export default {
         //alert("asdasdas")
     }
     const goAdminPage = () => {
+        isMenuOpen.value = false;
+        const modalEl = document.querySelector('.modal_screen_sidemenu');
+            if (modalEl) {
+            modalEl.style.display = 'none';
+        }
         router.push('/admin/main')
     }
     const activeMenuCode = ref(null)

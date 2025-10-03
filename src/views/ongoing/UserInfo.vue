@@ -54,7 +54,7 @@
         </div>
 
         <div class="form_footer">
-            <button class="btn btn_mx bg_white" @click="goLogInPage">로그인 페이지로 돌아가기</button>
+            <button class="btn btn_mx bg_white" @click="goMainPage">메인 페이지로 돌아가기</button>
             <button class="btn btn_mx bg_primary" @click="updateUser">수정하기</button>
         </div>
 
@@ -66,7 +66,7 @@
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import api from '../../plugins/api'
-import { ref , watchEffect , computed , onMounted , reactive } from 'vue'
+import { ref , watchEffect , computed , onMounted , reactive , watch } from 'vue'
 
 
 
@@ -156,8 +156,8 @@ export default {
             }
         }
 
-        const goLogInPage = () => {
-            router.push('/LogIn/')
+        const goMainPage = () => {
+            router.push('/CategoryList/')
         }
         const emptyPassword = ref(false)
         const changePassword = () => {
@@ -266,6 +266,13 @@ export default {
             }
 
         };
+        watch(() => userInfo.userNm, (newVal) => {
+            const validId = newVal.replace(/[^a-zA-Z가-힣]/g, ''); //못쓰게 막는다 영문, 한글 제외
+            if (newVal !== validId) {
+                userInfo.userNm = validId;
+            }
+        });
+
 
         onMounted(() => {
             getUserInfo()
@@ -273,7 +280,7 @@ export default {
         
         return {
         
-        goLogInPage,
+        goMainPage,
 
         passwordError,
         birthYear,
@@ -285,7 +292,6 @@ export default {
         months,
         days, 
         userBirth,
-
       
         onPhoneInput,
 
@@ -294,6 +300,7 @@ export default {
         userInfo,
         changePassword,
         emptyPassword,
+
         }
     }
 }

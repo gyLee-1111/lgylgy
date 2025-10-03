@@ -160,7 +160,9 @@ export default {
             const boardRoles = [];
             for (let i = 0; i < entries.length; i++) {
                 const [roleCode, boardroleCode] = entries[i];
-                boardRoles.push({ roleCode, boardroleCode });
+                if(useRole !== 'N') {
+                boardRoles.push({boardCode: board.boardCode, roleCode: roleCode, boardroleCode: boardroleCode })
+                }
             }
             const params = {
                 adminBoardDto: board,

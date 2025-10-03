@@ -6,8 +6,6 @@
             <div class="content_box_white">
                 <div class="content_inline">
                     <h1>{{}}</h1>
-                    <h2 class="title_pg">게시판용 formcontents</h2>
-                    <span class="ment">각종 게시판용 input, textarea, select 등 모음</span>                    
                 </div>
             </div>
 
@@ -119,7 +117,8 @@
                                 <table class="basic_write mg_t50">
                                     <colgroup>
                                         <col width="10%"/>
-                                        <col width="80%"/>
+                                        <col width="70%"/>
+                                        <col width="10%"/>
                                         <col width="10%"/>
                                     </colgroup>
                                     <tbody>
@@ -131,6 +130,10 @@
                                                     </span>
                                                 </span>{{ item.insertUserId }}<span class="fc_requisite">*</span></td>
                                             <td @click="showRecomment(item.commentCode)">{{ item.commentContent }}</td>
+                                            <td v-if="userId">
+                                                <button @click="openCommentUpdateModal(item.commentCode)">수정</button><br>
+                                                <button @click="deleteComment(item.commentCode)">삭제</button>
+                                            </td>
                                             <td>{{ item.insertDt }}<span class="fc_requisite">*</span></td>
                                         </tr>
                                         
@@ -170,10 +173,13 @@
                         <div class="table_btn_func mg_b50">
                             <div class="grid2">
                                 <div class="left">
-                                    <button class="btn bg_white"><i class="ri-file-list-3-line"></i> 목록보기</button>
+                                    <button class="btn bg_white" @click="goBack"><i class="ri-file-list-3-line"></i> 목록보기</button>
                                 </div>
                                 <div class="right" v-if="post && userId === post.insertUserId">
-                                    <button class="btn bg_blue"><i class="ri-edit-line"></i> 수정하기</button>
+                                    <button class="btn bg_blue" @click="deletePost"><i class="ri-edit-line"></i> 삭제하기</button>
+                                </div>
+                                <div class="right" v-if="post && userId === post.insertUserId">
+                                    <button class="btn bg_blue" @click="goUpdatePost"><i class="ri-edit-line"></i> 수정하기</button>
                                 </div>
                                 <div class="right" v-if="post && post.answerCheck === 'Y' && post.noticeCheck === 'N'">
                                     <button class="btn bg_blue" @click="onClickAnswer"><i class="ri-edit-line"></i> 답변달기</button>
@@ -183,6 +189,21 @@
                     </div>
                 </div>
             </div>
+
+            
+            <!-- 모달영역 -->
+            <CommentPop
+                v-if="commentUpdateModalOpen"
+
+                :commentCode="selectedCommentCode"
+                @close="closeCommentUpdateModal">
+            </CommentPop>
+            
+
+
+            <!--// 모달영역 -->
+
+
         </div>
     </div>
 </template>
@@ -190,7 +211,7 @@
 <script>
 import { ref, onMounted } from 'vue'
 import api from '../../plugins/api'
-import { useRoute } from 'vue-router'
+import { useRoute,useRouter } from 'vue-router'
 import BoardCommon from './BoardCommon.vue'
 import { useAuthPinia } from '../../store/authPinia'
 import { QuillEditor } from '@vueup/vue-quill'
@@ -199,12 +220,17 @@ import 'dropzone/dist/dropzone.css'
 import Dropzone from 'dropzone'
 import { nextTick } from 'vue'
 
+import CommentPop from '../../components/CommentPop.vue'
+import { closeModalBackGround, openModalBackGround } from '../../utils/globalFunctions'
+
+
 Dropzone.autoDiscover = false;
 
 export default {
     name: "DetailPost",
     components: {
-        QuillEditor
+        QuillEditor,
+        CommentPop
     },
     setup() {
         const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -212,6 +238,7 @@ export default {
         const post = ref(null)
         const upperPost = ref(null)
         const route = useRoute()
+        const router = useRouter()
         const postCode = route.params.postCode || ''
         const postFile = ref([])
         const upperPostFile = ref([])
@@ -459,6 +486,43 @@ export default {
             }
         }
 
+        const deletePost = async() => {
+            if (!confirm('정말 삭제하시겠습니까?')) {
+                return
+            }
+            try {
+                const response = await api.post('/user/board/deletePost', { postCode: postCode });
+                if(response.status == 200){
+                   console.log('게시물 삭제 성공:', response.data)
+                   alert('게시물 삭제 완료.')
+                }
+                goBack()
+            } catch (error) {
+                console.error('게시물 삭제 실패:', error)
+                alert('게시물 삭제 실패.')
+            }
+
+        }
+
+        const deleteComment = async(commentCode) => {
+            if (!confirm('정말 삭제하시겠습니까?')) {
+                return
+            }
+            try {
+                const response = await api.post('/user/board/deleteComment', { commentCode });
+                if(response.status == 200){
+                   console.log('게시물 삭제 성공:', response.data)
+                   alert('게시물 삭제 완료.')
+                }
+                location.reload();
+            } catch (error) {
+                console.error('게시물 삭제 실패:', error)
+                alert('게시물 삭제 실패.')
+            }
+
+        }
+
+
 
 /*
         const showRecomment = (commentCode) => {
@@ -477,9 +541,35 @@ export default {
                 selectedCommentCode.value = commentCode
             }
         }
+        const goUpdatePost = async() =>{
+            router.push('/updatePost/' + postCode)
+        }
 
+        const goBack = async() =>{
+
+
+           router.push('/boardCommon/' + post.value.boardCode)
+        }
         
    
+        const commentUpdateModalOpen = ref(false)
+
+        const openCommentUpdateModal = async(commentCode) => {
+            console.log('모달 열기 시도, commentCode:', commentCode)
+            selectedCommentCode.value = commentCode
+            commentUpdateModalOpen.value = true;
+            document.body.style.overflow = 'hidden';
+
+            openModalBackGround();
+        }
+
+        const closeCommentUpdateModal = () => {
+
+            commentUpdateModalOpen.value = false
+            document.body.style.overflow = 'auto'
+            location.reload();
+            closeModalBackGround();
+        }
    
         onMounted(() => {
             getDetailPost(postCode)
@@ -512,7 +602,15 @@ export default {
             upperPostFile,
             dropZoneRun,
             apiBaseUrl,
+            goUpdatePost,
 
+            goBack,
+            deletePost,
+            deleteComment,
+
+            commentUpdateModalOpen,
+            openCommentUpdateModal,
+            closeCommentUpdateModal,
         }   
     }
 }
